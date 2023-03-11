@@ -15,6 +15,10 @@ const transactionsSchema = mongoose.Schema({
         },
         required: [true, "Transactions Must have transactions type"]
     },
+    tradeIn: {
+        type: Boolean,
+        default: false
+    },
     status: {
         type: String,
         enum: {
