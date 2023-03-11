@@ -34,12 +34,20 @@ app.use(EPPP({
 app.use(cors({ origin: "*" }))
 
 // Router
-const chat = require(path.join(__dirname, "./routes/chat.js"));
-const booking = require(path.join(__dirname, "./routes/booking.js"));
-const car = require(path.join(__dirname, "./routes/car.js"));
-const seller = require(path.join(__dirname, "./routes/seller.js"));
-const transaction = require(path.join(__dirname, "./routes/transaction.js"));
-const user = require(path.join(__dirname, "./routes/user.js"));
+const chat = require(path.join(__dirname, "./routes/chatRoutes.js"));
+const booking = require(path.join(__dirname, "./routes/bookingRoutes.js"));
+const car = require(path.join(__dirname, "./routes/carRoutes.js"));
+const seller = require(path.join(__dirname, "./routes/sellerRoutes.js"));
+const transaction = require(path.join(__dirname, "./routes/transactionRoutes.js"));
+const user = require(path.join(__dirname, "./routes/userRoutes.js"));
+
+// Server Check
+app.get("/", (req, res) => {
+    res.status(200).json({
+        status: "success",
+        message: "Server Up and Running"
+    });
+});
 
 // Routing
 app.use("/api/v1/chat", chat);
