@@ -1,8 +1,8 @@
-class APIError extends Error {
+class APIError {
     constructor(http, message) {
-        this.http = http;
+        this.statusCode = http;
         this.status = String(http).startsWith("4") ? "Client Error" : "Server Error";
-        super(message);
+        this.message = message;
     }
 }
 
