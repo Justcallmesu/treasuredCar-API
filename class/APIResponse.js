@@ -1,9 +1,10 @@
 class APIREsponse {
-    constructor(status, http, message, data = undefined) {
+    constructor(statusCode, status, message, data = {}) {
+        this.statusCode = statusCode;
         this.status = status;
-        this.http = http;
         this.message = message;
-        this.data = data;
+        this.results = Object.keys(data).length;
+        this.data = { ...data };
     }
 }
 
