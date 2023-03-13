@@ -9,12 +9,13 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 // NPM Modules
+const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const EPPP = require("express-parameter-polution-preventer");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss_clean = require("xss-clean");
-const EPPP = require("express-parameter-polution-preventer");
-const cors = require("cors");
 
 // Development Tools
 const morgan = require("morgan");
@@ -32,6 +33,12 @@ app.use(EPPP({
     join: "off"
 }));
 app.use(cors({ origin: "*" }))
+
+// Error Handler
+const errorHandler = require(path.join(__dirname, "./error/errorHandler.js"))
+
+// Parser
+app.use(bodyParser.json());
 
 // Router
 const chat = require(path.join(__dirname, "./routes/chatRoutes.js"));
@@ -56,5 +63,8 @@ app.use("/api/v1/car", car);
 app.use("/api/v1/seller", seller);
 app.use("/api/v1/transaction", transaction);
 app.use("/api/v1/user", user);
+
+// Error Handling
+app.use("*", errorHandler)
 
 module.exports = { server, io };
