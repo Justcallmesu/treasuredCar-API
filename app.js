@@ -25,7 +25,6 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware
-app.use(cookieParser());
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss_clean());
@@ -38,6 +37,7 @@ app.use(cors({ origin: "*" }))
 const errorHandler = require(path.join(__dirname, "./error/errorHandler.js"))
 
 // Parser
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 // Router
