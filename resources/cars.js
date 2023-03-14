@@ -88,6 +88,11 @@ const carsSchema = mongoose.Schema({
         type: Number,
         required: [true, "Car must have a price"]
     },
+    postedAt: {
+        type: Date,
+        default: Date.now(),
+        required: [true, "Car must have posted at"]
+    },
     status: {
         type: String,
         enum: {
