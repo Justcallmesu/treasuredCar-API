@@ -1,7 +1,6 @@
 // NPM modules
 const bcrypt = require("bcrypt");
 
-
 // Mongoose
 const mongoose = require("mongoose");
 
@@ -22,7 +21,7 @@ const userSchema = mongoose.Schema(
             required: [true, "User must have a password"],
             select: false
         },
-        roles: {
+        role: {
             type: String,
             default: "User",
             enum: {

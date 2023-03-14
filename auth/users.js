@@ -1,5 +1,4 @@
 // NPm Modules
-const jwt = require("jsonwebtoken");
 const path = require("path");
 
 // Class
@@ -26,7 +25,7 @@ exports.login = async function (req, res, next) {
     if (!foundUser) return next(new APIError(400, "Your email or password is incorrect"));
     if (!(await foundUser.comparePassword(body.password))) return next(new APIError(400, "Your email or password is incorrect"));
 
-    sendToken(req, res, body.email, new APIResponse(200, "success", "login Successfully"));
+    sendToken(req, res, body.email, new APIResponse(200, "success", "login Successfully"), "user");
 };
 
 
@@ -48,6 +47,6 @@ exports.register = async function (req, res, next) {
 
     const { name, email } = await users.create(body);
 
-    sendToken(req, res, email, new APIResponse(201, "success", "User created successfully", { user: { name, email } }));
+    sendToken(req, res, email, new APIResponse(201, "success", "User created successfully", { user: { name, email } }, "user"));
 
 }
