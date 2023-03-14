@@ -69,4 +69,4 @@ exports.allowedRoles = function (roles) {
         }
         next();
     }
-}
+};
