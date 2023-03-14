@@ -26,10 +26,9 @@ exports.registerSeller = async function (req, res, next) {
 
     const isExist = await sellers.findOne({ userId: user._id });
 
-    if (isExist) return next(new APIError(409, "There is already existing store that yours "));
+    if (isExist) return next(new APIError(409, "There is already existing store that yours"));
 
     const { _doc: { name, email } } = await sellers.create({ userId: user._id, ...body });
-
 
     res.status(200).json(new APIResponse(201, "success", "Seller Created Successfully", { name, email })).end();
 }
