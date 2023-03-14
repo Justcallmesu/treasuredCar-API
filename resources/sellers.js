@@ -19,14 +19,6 @@ const sellerSchema = mongoose.Schema({
         type: String,
         required: [true, "Seller must have a password"]
     },
-    token: {
-        type: String,
-        required: [true, "Token must attached to user"]
-    },
-    refreshToken: {
-        type: String,
-        required: [true, "Token must attached to user"]
-    },
     ratings: {
         type: Number,
         default: 4,
@@ -34,8 +26,10 @@ const sellerSchema = mongoose.Schema({
     }
 });
 
+sellerSchema.index({ email: 1 })
+
 // Middleware
-sellerSchema.pre("save", async (next) => {
+sellerSchema.pre("save", async function (next) {
     try {
         this.password = await bcrypt.hash(this.password, 12);
         next();

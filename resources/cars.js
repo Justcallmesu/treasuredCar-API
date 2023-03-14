@@ -80,6 +80,22 @@ const carsSchema = mongoose.Schema({
     imageCover: {
         type: String
     },
+    description: {
+        type: String,
+        required: [true, "Car must have a description"]
+    },
+    price: {
+        type: Number,
+        required: [true, "Car must have a price"]
+    },
+    status: {
+        type: String,
+        enum: {
+            values: ["Posted", "Sold"],
+            message: "Car must have a status"
+        },
+        default: "Posted"
+    },
     location: locationSchema
 })
 
