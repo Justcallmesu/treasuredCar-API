@@ -1,3 +1,10 @@
+// Core Modules
+const path = require("path");
+
+// Class
+const APIError = require(path.join(__dirname, "../class/APIerror.js"));
+
+
 /***
  * @param @type data   passed data must in a object form
  * @param length how many data you expect to get
