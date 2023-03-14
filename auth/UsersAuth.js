@@ -12,17 +12,18 @@ const user = require(path.join(__dirname, "../resources/users.js"));
 const APIError = require(path.join(__dirname, "../class/APIerror.js"));
 
 // Auth Helper Functions
-const isRefreshTokenValid = function (req, res, next) {
+const isRefreshTokenValid = async function (req, res, next) {
     const { cookies: { userRefreshToken } } = req;
-    if (userRefreshToken) {
-        return next(new APIError(400, "Auth Not found"));
-    }
+
+    if (userRefreshToken) return next(new APIError(400, "Auth Not found"));
 
     const isValid = JWT.verify(userRefreshToken, process.env.JWTRefreshTokenSecretKey);
 
-    if (!isValid) {
-        return false;
-    }
+    if (!isValid) return false;
+
+    const isExist = await user.findOne({ email: isValid.email });
+
+    if (!isExist) return next(new APIError(404, "User Doesnt Exist"));
 
     const jwt = JWT.sign({
         email: isValid.email
@@ -38,13 +39,15 @@ const isRefreshTokenValid = function (req, res, next) {
     return true;
 }
 
-exports.validateAuth = async function (req, res, next) {
+exports.isLoggedIn = async function (req, res, next) {
     const { cookies } = req;
+
     if (cookies) {
         return next(new APIError(400, "Auth Not found"));
     }
 
     const tokenValid = JWT.verify(token, process.env.JWTTokenSecretKey);
+
     if (!tokenValid && isRefreshTokenValid(req, res)) {
         return next(new APIError(401, "Token is invalid or Expired Please Relogin"));
     }
@@ -54,5 +57,16 @@ exports.validateAuth = async function (req, res, next) {
     if (!founduser) return next(new APIError(404, "Your data doesnt exist please Relogin"));
 
     req.user = founduser;
+
     next();
 };
+
+exports.allowedRoles = function (roles) {
+    return (req, res, next) => {
+        const { user } = req;
+        if (!roles.includes(user.role)) {
+            return next(new APIError(401, "You are not permissioned to do this"))
+        }
+        next();
+    }
+}
