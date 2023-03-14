@@ -1,7 +1,6 @@
 // NPM modules
 const bcrypt = require("bcrypt");
 
-
 // Mongoose
 const mongoose = require("mongoose");
 
