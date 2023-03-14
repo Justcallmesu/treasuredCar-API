@@ -32,6 +32,10 @@ const userSchema = mongoose.Schema(
             required: [true, "User must have a roles"],
             select: false
         },
+        photo: {
+            type: String,
+            default: "default.jpg"
+        },
         passwordLastChanged: {
             type: String,
             default: Date.now(),

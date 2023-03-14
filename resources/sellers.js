@@ -23,6 +23,10 @@ const sellerSchema = mongoose.Schema({
         type: String,
         required: [true, "Token must attached to user"]
     },
+    photo: {
+        type: String,
+        default: "defaultStore.jpg"
+    },
     refreshToken: {
         type: String,
         required: [true, "Token must attached to user"]
