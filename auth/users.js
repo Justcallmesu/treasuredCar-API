@@ -12,6 +12,7 @@ const users = require(path.join(__dirname, "../resources/users.js"));
 const sendToken = require(path.join(__dirname, "../methods/sendToken.js"));
 const validateBody = require(path.join(__dirname, "../methods/validateBody.js"));
 
+
 exports.login = async function (req, res, next) {
     const { body } = req;
     if (!body) return next(new APIError(400, "Please attach a data"));

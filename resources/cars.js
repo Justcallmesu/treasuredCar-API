@@ -21,11 +21,9 @@ const taxSchema = mongoose.Schema({
     },
     dendaTaxTotal: {
         type: Number,
-        default: 0
     },
     pokokTaxTotal: {
-        type: String,
-        required: [true, "Car Must have Tax pokok Total"]
+        type: Number,
     }
 })
 
@@ -36,12 +34,10 @@ const locationSchema = mongoose.Schema({
             values: ["Point"],
             message: "type can only be in the form of Points"
         },
+        default: "Point",
         required: [true, "type must be filled"]
     },
-    coordinates: [{
-        type: Number,
-        required: [true, "Location must have a coordinates"]
-    }]
+    coordinates: [Number]
 })
 
 const carsSchema = mongoose.Schema({
@@ -54,8 +50,9 @@ const carsSchema = mongoose.Schema({
         type: String,
         required: [true, "Car must have a name"]
     },
-    horsePower: {
-        type: String
+    cc: {
+        type: String,
+        required: [true, "Car must have a cc"]
     },
     tax: taxSchema,
     plateNumber: {
@@ -73,6 +70,14 @@ const carsSchema = mongoose.Schema({
     bodyType: {
         type: String,
         required: [true, "Car Must have type"]
+    },
+    ATMT: {
+        type: String,
+        enum: {
+            values: ["AT", "MT"],
+            message: "ATMT values only either AT or MT"
+        },
+        required: [true, "Car must have a AT or MT type"]
     },
     image: [{
         type: String
@@ -104,6 +109,11 @@ const carsSchema = mongoose.Schema({
     location: locationSchema
 })
 
+carsSchema.pre("save", function (next) {
+    this.tax.pokokTaxTotal = parseInt(this.tax.PKBPokok + this.tax.SWDKLLJPokok);
+    this.tax.dendaTaxTotal = parseInt(this.tax.PKBDenda + this.tax.SWDKLLJDenda);
+    next();
+})
 
 const cars = mongoose.model("cars", carsSchema);
 
