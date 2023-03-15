@@ -8,7 +8,7 @@ const APIResponse = require(path.join(__dirname, "../class/APiResponse.js"));
 
 // Methods
 const sendToken = require(path.join(__dirname, "../methods/sendToken.js"));
-const sendCookies = require(path.join(__dirname, "../methods/sendCookies.js"));
+const isRefreshTokenValid = require(path.join(__dirname, "../methods/isRefreshTokenValid.js"));
 const validateBody = require(path.join(__dirname, "../methods/validateBody.js"));
 
 // Models

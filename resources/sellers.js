@@ -29,6 +29,14 @@ const sellerSchema = mongoose.Schema(
             type: String,
             default: "defaultStore.jpg"
         },
+        passwordChangedAt: {
+            type: Date,
+            default: Date.now()
+        },
+        infoChangeCooldown: {
+            type: Date,
+            default: Date.now()
+        },
         ratings: {
             type: Number,
             default: 4,

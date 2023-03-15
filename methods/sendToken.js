@@ -19,7 +19,7 @@ async function sendToken(req, res, email, data, role = "user") {
             refreshCookieAge: process.env.SellerRefreshCookieMaxAge,
             tokenCookieAge: process.env.SellerTokenCookieMaxAge
         }
-    console.table({ refreshSecretKey, tokenSecretKey, refreshExpires, tokenExpires, refreshCookieAge, tokenCookieAge })
+
     const refreshToken = await jwt.sign({ email }, refreshSecretKey,
         {
             expiresIn: refreshExpires
