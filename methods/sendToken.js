@@ -1,7 +1,7 @@
 // NPM Modules
 const jwt = require("jsonwebtoken");
 
-async function sendToken(req, res, email, data, role) {
+async function sendToken(req, res, email, data, role = "user") {
 
     const { refreshSecretKey, tokenSecretKey, refreshExpires, tokenExpires, refreshCookieAge, tokenCookieAge } = role === "user" ? {
         refreshSecretKey: process.env.UserJWTRefreshTokenSecretKey,

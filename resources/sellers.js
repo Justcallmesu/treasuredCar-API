@@ -23,17 +23,9 @@ const sellerSchema = mongoose.Schema({
         type: String,
         required: [true, "Seller must have a password"]
     },
-    token: {
-        type: String,
-        required: [true, "Token must attached to user"]
-    },
     photo: {
         type: String,
         default: "defaultStore.jpg"
-    },
-    refreshToken: {
-        type: String,
-        required: [true, "Token must attached to user"]
     },
     ratings: {
         type: Number,
