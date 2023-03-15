@@ -7,29 +7,23 @@ const path = require("path");
 
 // Models
 const user = require(path.join(__dirname, "../resources/users.js"));
-const isRefreshTokenValid = require(path.join(__dirname, "../methods/sendCookies.js"));
+
+// Methods
+const isRefreshTokenValid = require(path.join(__dirname, "../methods/isRefreshTokenValid.js"));
+const tokenIsValid = require(path.join(__dirname, "../methods/validateToken.js"));
 
 // Class
 const APIError = require(path.join(__dirname, "../class/APIerror.js"));
 
-function tokenIsValid(userToken) {
-    const tokenValid = JWT.verify(userToken, process.env.UserJWTTokenSecretKey);
-
-    if (!tokenValid) {
-        next(new APIError(401, "Your token may invalid or Expired Please Relogin"));
-        return false;
-    }
-    return tokenValid;
-}
-
 exports.isLoggedIn = async function (req, res, next) {
     const { cookies: { userToken, userRefreshToken } } = req;
 
-    if (!userToken && !userRefreshToken) {
+    if (!userRefreshToken) {
         return next(new APIError(400, "Auth Not found"));
     }
 
-    !userToken && await isRefreshTokenValid(req, res, next);
+    !userToken && await isRefreshTokenValid(req, res, next, "user");
+
     const tokenValid = tokenIsValid(res.locals?.cookies || userToken);
 
     if (!tokenIsValid) return;

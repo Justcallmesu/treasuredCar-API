@@ -8,7 +8,7 @@ const APIResponse = require(path.join(__dirname, "../class/APiResponse.js"));
 
 // Methods
 const sendToken = require(path.join(__dirname, "../methods/sendToken.js"));
-const sendCookies = require(path.join(__dirname, "../methods/sendCookies.js"));
+const isRefreshTokenValid = require(path.join(__dirname, "../methods/isRefreshTokenValid.js"));
 const validateBody = require(path.join(__dirname, "../methods/validateBody.js"));
 
 // Models
@@ -29,6 +29,25 @@ exports.registerSeller = async function (req, res, next) {
     if (isExist) return next(new APIError(409, "There is already existing store that yours"));
 
     const { _doc: { name, email } } = await sellers.create({ userId: user._id, ...body });
+    sendToken(req, res, email, new APIResponse(201, "success", "Seller Created Successfully", { name, email }), "seller");
+};
 
-    res.status(200).json(new APIResponse(201, "success", "Seller Created Successfully", { name, email })).end();
+exports.loginSeller = async function (req, res, next) {
+    const { body } = req;
+
+    if (!Object.keys(body).length) return next(new APIError(400, "Please Attach data"));
+
+    if (validateBody(body, 2, next)) return;
+
+    if (!"email" in body || !"password" in body) return next(new APIError(400, "Unknown Data"));
+
+    const seller = await sellers.findOne({ email: body.email }).select("+password");
+
+    if (!seller) return next(new APIError(400, "Email or Password not Correct"));
+
+    if (!await seller.comparePassword(body.password)) return next(new APIError(400, "Email or Password not Correct"));
+
+    const { name, email } = seller;
+
+    sendToken(req, res, seller.email, new APIResponse(200, "success", "Login Successfully", { name, email }), "seller");
 }
