@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 // Schema
-const taxSchema = mongoose.Schema({
+const taxSchema = {
     PKBPokok: {
         type: Number,
         required: [true, "Car must have a PKBPokok"]
@@ -25,9 +25,9 @@ const taxSchema = mongoose.Schema({
     pokokTaxTotal: {
         type: Number,
     }
-})
+}
 
-const locationSchema = mongoose.Schema({
+const locationSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: {
@@ -37,8 +37,14 @@ const locationSchema = mongoose.Schema({
         default: "Point",
         required: [true, "type must be filled"]
     },
-    coordinates: [Number]
-})
+    coordinates: [Number],
+    address: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+});
 
 const carsSchema = mongoose.Schema({
     sellerId: {
@@ -107,11 +113,16 @@ const carsSchema = mongoose.Schema({
         default: "Posted"
     },
     location: locationSchema
-})
+});
+
+carsSchema.index({ location: "2dsphere" });
 
 carsSchema.pre("save", function (next) {
     this.tax.pokokTaxTotal = parseInt(this.tax.PKBPokok + this.tax.SWDKLLJPokok);
     this.tax.dendaTaxTotal = parseInt(this.tax.PKBDenda + this.tax.SWDKLLJDenda);
+
+    this.location.coordinates[0] = this.location.coordinates[0] === 0.000000 ? 0.000001 : this.location.coordinates[0];
+    this.location.coordinates[1] = this.location.coordinates[1] === 0.000000 ? 0.000001 : this.location.coordinates[1];
     next();
 })
 

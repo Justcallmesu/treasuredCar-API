@@ -10,6 +10,7 @@ const sellerSchema = mongoose.Schema(
         userId: {
             type: mongoose.Types.ObjectId,
             required: [true, "Sellers must have a userId"],
+            unique: true,
             select: false
         },
         name: {
@@ -18,6 +19,7 @@ const sellerSchema = mongoose.Schema(
         },
         email: {
             type: String,
+            unique: true,
             requird: [true, "Seller must have a email"]
         },
         password: {
