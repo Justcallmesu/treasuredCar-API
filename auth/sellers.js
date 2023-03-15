@@ -31,3 +31,23 @@ exports.registerSeller = async function (req, res, next) {
     const { _doc: { name, email } } = await sellers.create({ userId: user._id, ...body });
     sendToken(req, res, email, new APIResponse(201, "success", "Seller Created Successfully", { name, email }), "seller");
 };
+
+exports.loginSeller = async function (req, res, next) {
+    const { body } = req;
+
+    if (!Object.keys(body).length) return next(new APIError(400, "Please Attach data"));
+
+    if (validateBody(body, 2, next)) return;
+
+    if (!"email" in body || !"password" in body) return next(new APIError(400, "Unknown Data"));
+
+    const seller = await sellers.findOne({ email: body.email }).select("+password");
+
+    if (!seller) return next(new APIError(400, "Email or Password not Correct"));
+
+    if (!await seller.comparePassword(body.password)) return next(new APIError(400, "Email or Password not Correct"));
+
+    const { name, email } = seller;
+
+    sendToken(req, res, seller.email, new APIResponse(200, "success", "Login Successfully", { name, email }), "seller");
+}

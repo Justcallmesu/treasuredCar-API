@@ -25,11 +25,12 @@ function tokenIsValid(userToken) {
 exports.isLoggedIn = async function (req, res, next) {
     const { cookies: { userToken, userRefreshToken } } = req;
 
-    if (!userToken && !userRefreshToken) {
+    if (!userRefreshToken) {
         return next(new APIError(400, "Auth Not found"));
     }
 
     !userToken && await isRefreshTokenValid(req, res, next);
+
     const tokenValid = tokenIsValid(res.locals?.cookies || userToken);
 
     if (!tokenIsValid) return;
