@@ -43,3 +43,21 @@ exports.getCar = async function (req, res, next) {
 
     res.status(200).json(new APIResponse(200, "success", "Successfully Fetched", foundData));
 }
+
+exports.updateCar = async function (req, res, next) {
+    const { body, params: { _id } } = req;
+
+    if (!Object.keys(body).length) return next(new APIError(400, "Must contain data"));
+
+    const foundCar = await cars.findOne({ _id }).select("-_id -sellerId");
+
+    if (!foundCar) return res.status(404).json(new APIError(404, "Not Found"));
+
+    const status = await cars.findOneAndUpdate({ _id }, { ...foundCar.toObject(), ...body }, { new: true }).select("-_id -sellerId");
+
+    res.status(200).json(new APIResponse(200, "success", "Updated", status.toObject()));
+};
+
+exports.deleteCar = async function (req, res, next) {
+
+}
