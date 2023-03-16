@@ -9,21 +9,24 @@ const APIError = require(path.join(__dirname, "../class/APIerror.js"));
 
 // Models
 const user = require(path.join(__dirname, "../resources/users.js"));
+const seller = require(path.join(__dirname, "../resources/sellers.js"));
 
 // Auth Helper Functions
 const isRefreshTokenValid = async function (req, res, next, role) {
     const { cookies: { userRefreshToken, sellerRefreshToken } } = req;
 
-    const { refreshTokenKey, tokenKey, expires } = role === "user" ?
+    const { refreshTokenKey, tokenKey, expires, query } = role === "user" ?
         {
             refreshTokenKey: process.env.UserJWTRefreshTokenSecretKey,
             tokenKey: process.env.UserJWTTokenSecretKey,
-            expires: process.env.JWTUserTokenAge
+            expires: process.env.JWTUserTokenAge,
+            query: user.findOne
         } :
         {
             refreshTokenKey: process.env.SellerJWTRefreshTokenSecretKey,
             tokenKey: process.env.SellerJWTTokenSecretKey,
-            expires: process.env.JWTSellerTokenAge
+            expires: process.env.JWTSellerTokenAge,
+            query: seller.findOne
         }
 
     if (role === "user" && !userRefreshToken) {
@@ -40,7 +43,7 @@ const isRefreshTokenValid = async function (req, res, next, role) {
 
     if (!isValid) return false;
 
-    const isExist = await user.findOne({ email: isValid.email });
+    const isExist = await query({ email: isValid.email });
 
     if (!isExist) {
         next(new APIError(404, "User Doesnt Exist"))
