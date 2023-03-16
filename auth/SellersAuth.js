@@ -19,7 +19,7 @@ const APIError = require(path.join(__dirname, "../class/APIerror.js"));
 exports.isSeller = async function (req, res, next) {
     const { cookies: { sellerRefreshToken, sellerToken } } = req;
 
-    if (!sellerRefreshToken) return next(new APIError(400, "Auth not found"));
+    if (!sellerRefreshToken) return next(new APIError(400, "Seller Auth not found"));
 
     if (!sellerToken && !await isRefreshTokenValid(req, res, next, "seller")) return;
 
