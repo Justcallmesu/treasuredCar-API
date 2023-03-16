@@ -21,7 +21,7 @@ exports.isSeller = async function (req, res, next) {
 
     if (!sellerRefreshToken) return next(new APIError(400, "Auth not found"));
 
-    !sellerToken && isRefreshTokenValid(req, res, next, "seller");
+    if (!sellerToken && !await isRefreshTokenValid(req, res, next, "seller")) return;
 
     const tokenValid = tokenIsValid(res.locals?.cookies || sellerToken, "seller");
 
@@ -32,6 +32,5 @@ exports.isSeller = async function (req, res, next) {
     if (!foundSellers) return next(new APIError(404, "Your data doesnt exist please Relogin"));
 
     req.seller = foundSellers;
-
     next();
 }
