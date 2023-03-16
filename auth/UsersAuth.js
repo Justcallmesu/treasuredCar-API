@@ -18,11 +18,10 @@ const APIError = require(path.join(__dirname, "../class/APIerror.js"));
 exports.isLoggedIn = async function (req, res, next) {
     const { cookies: { userToken, userRefreshToken } } = req;
 
-    if (!userRefreshToken) {
-        return next(new APIError(400, "Auth Not found"));
-    }
+    if (!userRefreshToken) return next(new APIError(400, "Auth Not found"));
 
-    !userToken && await isRefreshTokenValid(req, res, next, "user");
+
+    if (!userToken && !await isRefreshTokenValid(req, res, next, "user")) return;
 
     const tokenValid = tokenIsValid(res.locals?.cookies || userToken, "user");
 
