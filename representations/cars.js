@@ -18,7 +18,7 @@ exports.postCar = async function (req, res, next) {
 
     if (validateBody(body, 11, next)) return;
 
-    const createdCar = await cars.create({ sellerId: seller._id, ...body });
+    const { _doc } = await cars.create({ sellerId: seller._id, ...body });
 
-    return res.status(201).json(new APIResponse(200, "success", "Car Successfully Created", createdCar));
+    return res.status(201).json(new APIResponse(200, "success", "Car Successfully Created", _doc));
 }
