@@ -9,7 +9,7 @@ const path = require("path");
 const sellers = require(path.join(__dirname, "../resources/sellers.js"));
 
 // Methods
-const isRefreshTokenValid = require(path.join(__dirname, "../methods/sendCookies.js"));
+const isRefreshTokenValid = require(path.join(__dirname, "../methods/isRefreshTokenValid.js"));
 const tokenIsValid = require(path.join(__dirname, "../methods/validateToken.js"));
 
 // Class
@@ -23,15 +23,15 @@ exports.isSeller = async function (req, res, next) {
 
     !sellerToken && isRefreshTokenValid(req, res, next, "seller");
 
-    const tokenValid = tokenIsValid(res.locals?.cookies || userToken);
+    const tokenValid = tokenIsValid(res.locals?.cookies || sellerToken, "seller");
 
     if (!tokenIsValid) return;
 
-    const founduser = await sellers.findOne({ email: tokenValid.email });
+    const foundSellers = await sellers.findOne({ email: tokenValid.email });
 
-    if (!founduser) return next(new APIError(404, "Your data doesnt exist please Relogin"));
+    if (!foundSellers) return next(new APIError(404, "Your data doesnt exist please Relogin"));
 
-    req.user = founduser;
+    req.seller = foundSellers;
 
     next();
 }
