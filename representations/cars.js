@@ -33,3 +33,13 @@ exports.getCars = async function (req, res, next) {
 
     res.status(200).json(new APIResponse(200, "success", "Data Successfully Fetched", foundCars));
 }
+
+exports.getCar = async function (req, res, next) {
+    const { params: { _id } } = req;
+
+    const foundData = await cars.findOne({ _id }).lean();
+
+    if (!foundData) return res.status(404).json(new APIError(404, "Not Found"));
+
+    res.status(200).json(new APIResponse(200, "success", "Successfully Fetched", foundData));
+}
