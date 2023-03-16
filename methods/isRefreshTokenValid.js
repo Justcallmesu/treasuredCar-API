@@ -15,18 +15,18 @@ const seller = require(path.join(__dirname, "../resources/sellers.js"));
 const isRefreshTokenValid = async function (req, res, next, role) {
     const { cookies: { userRefreshToken, sellerRefreshToken } } = req;
 
-    const { refreshTokenKey, tokenKey, expires, query } = role === "user" ?
+    const isUser = role === "user";
+
+    const { refreshTokenKey, tokenKey, expires, } = isUser ?
         {
             refreshTokenKey: process.env.UserJWTRefreshTokenSecretKey,
             tokenKey: process.env.UserJWTTokenSecretKey,
             expires: process.env.JWTUserTokenAge,
-            query: user.findOne
         } :
         {
             refreshTokenKey: process.env.SellerJWTRefreshTokenSecretKey,
             tokenKey: process.env.SellerJWTTokenSecretKey,
             expires: process.env.JWTSellerTokenAge,
-            query: seller.findOne
         }
 
     if (role === "user" && !userRefreshToken) {
@@ -34,16 +34,16 @@ const isRefreshTokenValid = async function (req, res, next, role) {
         return false;
     };
 
-    if (role === "seller" && !userRefreshToken) {
+    if (role === "seller" && !sellerRefreshToken) {
         next(new APIError(400, "Auth Not found"))
         return false;
     };
 
-    const isValid = JWT.verify(userRefreshToken, refreshTokenKey);
+    const isValid = JWT.verify(isUser ? userRefreshToken : sellerRefreshToken, refreshTokenKey);
 
     if (!isValid) return false;
 
-    const isExist = await query({ email: isValid.email });
+    const isExist = isUser ? await user.findOne({ email: isValid.email }) : await seller.findOne({ email: isValid.email });
 
     if (!isExist) {
         next(new APIError(404, "User Doesnt Exist"))
@@ -58,7 +58,6 @@ const isRefreshTokenValid = async function (req, res, next, role) {
 
     res.cookie(`${role}Token`, jwt);
     res.locals.cookies = jwt;
-
     return true;
 }
 
