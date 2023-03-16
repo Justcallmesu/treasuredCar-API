@@ -59,5 +59,13 @@ exports.updateCar = async function (req, res, next) {
 };
 
 exports.deleteCar = async function (req, res, next) {
+    const { params: { _id } } = req;
 
+    const foundCar = await cars.findOne({ _id });
+
+    if (!foundCar) return res.status(404).json(new APIError(404, "Not Found"));
+
+    await cars.deleteOne({ _id });
+
+    res.status(204).end();
 }
