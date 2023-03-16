@@ -57,7 +57,7 @@ const carsSchema = mongoose.Schema({
         required: [true, "Car must have a name"]
     },
     cc: {
-        type: String,
+        type: Number,
         required: [true, "Car must have a cc"]
     },
     tax: taxSchema,
