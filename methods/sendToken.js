@@ -30,13 +30,12 @@ async function sendToken(req, res, email, data, role = "user") {
             expiresIn: tokenExpires
         });
 
-    return res.cookie("userRefreshToken", refreshToken,
+    return res.cookie(`${role}RefreshToken`, refreshToken,
         {
             maxAge: refreshCookieAge,
             httpOnly: true
         })
-        .cookie("userToken", token, {
-            maxAge: tokenCookieAge,
+        .cookie(`${role}Token`, token, {
             httpOnly: true
         })
         .status(data.statusCode).json(data);
