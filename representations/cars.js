@@ -27,7 +27,7 @@ exports.postCar = async function (req, res, next) {
 exports.getCars = async function (req, res, next) {
     const { query } = req;
 
-    const { mongoQuery } = new QueryConstructor(cars, query).filterOrGet();
+    const { mongoQuery } = new QueryConstructor(cars, query).filterOrGet().pagination();
 
     const foundCars = await mongoQuery;
 
