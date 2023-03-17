@@ -19,5 +19,6 @@ exports.updateMyUser = async (req, res, next) => {
     const { name, email } = body;
 
     const { name: userName, email: userEmail } = await users.findOneAndUpdate({ _id: user._id }, { name, email }, { new: true }).lean();
+
     res.status(200).json(new APIResponse(201, "success", "Updated Successfully", { user: { userName, userEmail } }));
 };
