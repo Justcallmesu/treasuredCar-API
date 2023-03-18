@@ -37,6 +37,14 @@ const transactionsSchema = mongoose.Schema({
     }
 });
 
+// Index
+transactionsSchema.index({
+    userId: 1,
+    carId: 1
+}, {
+    unique: true
+});
+
 transactionsSchema.index(
     {
         createdAt: 1
