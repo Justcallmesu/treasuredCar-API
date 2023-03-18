@@ -25,7 +25,7 @@ exports.isLoggedIn = async function (req, res, next) {
 
     const tokenValid = tokenIsValid(res.locals?.cookies || userToken, "user");
 
-    if (!tokenIsValid) return;
+    if (!tokenIsValid && !await isRefreshTokenValid(req, res, next, "user")) return;
 
     const founduser = await user.findOne({ email: tokenValid.email });
 

@@ -57,12 +57,15 @@ app.get("/", (req, res) => {
 });
 
 // Routing
-app.use("/api/v1/chat", chat);
-app.use("/api/v1/booking", booking);
-app.use("/api/v1/car", car);
-app.use("/api/v1/seller", seller);
-app.use("/api/v1/transaction", transaction);
 app.use("/api/v1/user", user);
+app.use("/api/v1/seller", seller);
+
+app.use("/api/v1/chat", chat);
+
+app.use("/api/v1/transaction", transaction);
+app.use("/api/v1/booking", booking);
+
+app.use("/api/v1/car", car);
 
 // Error Handling
 app.use("*", errorHandler)

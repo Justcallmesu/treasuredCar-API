@@ -13,11 +13,13 @@ const { updateMyUser, deleteMyUser } = require(path.join(__dirname, "../represen
 
 // Router
 const router = require("express").Router();
+const transactionsRoute = require(path.join(__dirname, "./transactionRoutes.js"));
 
 router.route("/login").post(asyncHandler(login));
 router.route("/register").post(asyncHandler(register));
 
 router.use(asyncHandler(isLoggedIn));
+router.use("/myTransactions", transactionsRoute); //! Transactions Router
 
 router.route("/me").patch(asyncHandler(updateMyUser));
 router.route("/deleteme").delete(asyncHandler(deleteMyUser));
