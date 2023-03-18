@@ -23,3 +23,10 @@ exports.updateMySeller = async (req, res, next) => {
     res.status(200).json(new APIResponse(201, "success", "Updated Successfully", { user: { sellerName, sellerEmail } }));
 };
 
+exports.deleteMySeller = async (req, res, next) => {
+    const { seller } = req;
+
+    await sellers.findOneAndDelete({ _id: seller._id });
+
+    res.status(204).end();
+}
