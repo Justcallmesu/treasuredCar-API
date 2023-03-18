@@ -3,9 +3,13 @@ const mongoose = require("mongoose");
 
 // Schema
 const transactionsSchema = mongoose.Schema({
-    bookingId: {
+    userId: {
         type: mongoose.Types.ObjectId,
-        required: [true, "Transactions Must Have BookingId"]
+        required: [true, "Transactions must have a user"]
+    },
+    carId: {
+        type: mongoose.Types.ObjectId,
+        required: [true, "Transactions must have a car"]
     },
     type: {
         type: String,
@@ -32,6 +36,18 @@ const transactionsSchema = mongoose.Schema({
         default: Date.now()
     }
 });
+
+transactionsSchema.index(
+    {
+        createdAt: 1
+    }, {
+    expires: "1d",
+    partialFilterExpression: {
+        status: {
+            $eq: "unpaid"
+        }
+    }
+})
 
 const transactions = mongoose.model("transactions", transactionsSchema);
 
