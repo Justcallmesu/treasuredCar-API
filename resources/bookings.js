@@ -11,6 +11,10 @@ const bookingSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         required: [true, "Booking must have a Car"]
     },
+    transactionId: {
+        type: mongoose.Types.ObjectId,
+        required: [true, "Booking must have a Transactions"]
+    },
     date: {
         type: Date,
         default: Date.now()
