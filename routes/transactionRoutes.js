@@ -9,13 +9,18 @@ const { isSeller } = require(path.join(__dirname, "../auth/SellersAuth.js"));
 const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
 
 // Methods
-const { createTransactions } = require(path.join(__dirname, "../representations/transactions.js"));
+const { createTransactions, getTransactions, updateTransactionsStatus } = require(path.join(__dirname, "../representations/transactions.js"));
 
 // Router
 const router = require("express").Router({ mergeParams: true });
 
-router.use(asyncHandler(isLoggedIn));
+// Stripe
+router.route("/webhook").patch(asyncHandler(updateTransactionsStatus))
 
-router.route("/").post(asyncHandler(createTransactions));
+// Routing
+router.use(asyncHandler(isLoggedIn));
+router.route("/")
+    .get(asyncHandler(getTransactions))
+    .post(asyncHandler(createTransactions));
 
 module.exports = router;

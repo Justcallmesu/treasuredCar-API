@@ -5,11 +5,13 @@ const mongoose = require("mongoose");
 const transactionsSchema = mongoose.Schema({
     userId: {
         type: mongoose.Types.ObjectId,
-        required: [true, "Transactions must have a user"]
+        required: [true, "Transactions must have a user"],
+        ref: "users"
     },
     carId: {
         type: mongoose.Types.ObjectId,
-        required: [true, "Transactions must have a car"]
+        required: [true, "Transactions must have a car"],
+        ref: "cars"
     },
     type: {
         type: String,
@@ -38,12 +40,14 @@ const transactionsSchema = mongoose.Schema({
 });
 
 // Index
-transactionsSchema.index({
-    userId: 1,
-    carId: 1
-}, {
-    unique: true
-});
+transactionsSchema.index(
+    {
+        userId: 1,
+        carId: 1
+    },
+    {
+        unique: true
+    });
 
 transactionsSchema.index(
     {
