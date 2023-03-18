@@ -9,7 +9,7 @@ const { isLoggedIn } = require(path.join(__dirname, "../auth/UsersAuth.js"));
 const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
 
 // Methods
-const { updateMyUser } = require(path.join(__dirname, "../representations/users.js"));
+const { updateMyUser, deleteMyUser } = require(path.join(__dirname, "../representations/users.js"));
 
 // Router
 const router = require("express").Router();
@@ -20,6 +20,7 @@ router.route("/register").post(asyncHandler(register));
 router.use(asyncHandler(isLoggedIn));
 
 router.route("/me").patch(asyncHandler(updateMyUser));
+router.route("/deleteme").delete(asyncHandler(deleteMyUser));
 
 
 module.exports = router;
