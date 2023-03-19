@@ -82,6 +82,10 @@ exports.updateTransactionsStatus = async (req, res, next) => {
 
     if (!transaction) return next(new APIError(404, "Transaction Not Found"));
 
+    transaction.status = "paid";
+
+    await transaction.save();
+
     const booking = await bookings.create({ userId: user._id, carId: body.carId, transactionId: transaction._id, total: 1900000 });
 
     res.status(200).json(new APIResponse(200, "success", "Status Updated Successfully", { Transaction: transaction, booking }));
