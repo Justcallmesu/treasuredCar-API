@@ -20,12 +20,12 @@ class APiData {
                 if (!includedQuery.includes(value)) delete query[value];
             });
 
-            this.mongoQuery = this.mongoQuery.find(query);
+            this.mongoQuery = this.mongoQuery.find({ ...query, status: "Posted" });
 
             return this;
         };
 
-        this.mongoQuery = this.mongoQuery.find();
+        this.mongoQuery = this.mongoQuery.find({ status: "Posted" });
 
         return this;
     }
