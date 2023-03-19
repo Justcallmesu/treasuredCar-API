@@ -14,7 +14,7 @@ class APiData {
 
     filterOrGet() {
         if (this.urlQuery) {
-            const query = this.urlQuery;
+            const query = { ...this.urlQuery };
             const excludedQuery = ["page", "sort", "limit", "fields"];
             const includedQuery = ["name", "model", "bodyType", "ATMT", "brand", "price", "cc", "coordinates"];
             excludedQuery.forEach((value) => delete query[value]);
@@ -48,6 +48,13 @@ class APiData {
         return this;
     }
 
+    sort() {
+        if ("sort" in this.urlQuery && typeof this.urlQuery.sort === "string") {
+            const sort = this.urlQuery.sort.split(",").join(" ");
+            this.mongoQuery = this.mongoQuery.sort(sort);
+        };
+        return this;
+    }
 
     pagination() {
         const [page, itemsPerPage] = [(this.urlQuery.page * 1 || 1) - 1, this.urlQuery.itemsPerPage * 1 || 10];
