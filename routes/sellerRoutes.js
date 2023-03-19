@@ -15,12 +15,14 @@ const { updateMySeller, deleteMySeller } = require(path.join(__dirname, "../repr
 // Router
 const router = require("express").Router();
 const transactionsRoute = require(path.join(__dirname, "./transactionRoutes.js"));
+const bookingRoutes = require(path.join(__dirname, "./bookingRoutes.js"));
 
 router.route("/register").post(asyncHandler(isLoggedIn), asyncHandler(registerSeller));
 router.route("/login").post(asyncHandler(isLoggedIn), asyncHandler(loginSeller));
 
 router.use(asyncHandler(isLoggedIn), asyncHandler(isSeller));
 router.use("/myTransactions", transactionsRoute); //! Transactions Router
+router.use("/myBookings", bookingRoutes); //! Transactions Router
 
 router.route("/me").patch(asyncHandler(updateMySeller));
 router.route("/deleteme").delete(asyncHandler(deleteMySeller));
