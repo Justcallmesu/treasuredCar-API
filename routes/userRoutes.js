@@ -21,6 +21,7 @@ router.route("/register").post(asyncHandler(register));
 
 router.use(asyncHandler(isLoggedIn));
 router.use("/myTransactions", transactionsRoute); //! Transactions Router
+router.use("/updateMyBookings", bookingRoutes); //! Update Bookings Router
 router.use("/myBookings", bookingRoutes); //! Bookings Router
 
 router.route("/me").patch(asyncHandler(updateMyUser));

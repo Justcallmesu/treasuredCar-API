@@ -11,6 +11,7 @@ exports.getBookings = async (req, res, next) => {
     const { user, seller, baseUrl } = req;
 
     let query = null;
+
     if (new RegExp(/(user\/myBookings)/g).test(baseUrl)) {
         query = { userId: user._id }
     } else if (seller) {
@@ -47,4 +48,18 @@ exports.getBookings = async (req, res, next) => {
     const data = await bookings.find(query);
 
     res.status(200).json(new APIResponse(200, "success", "Data Successfully Fetched", data));
+}
+
+exports.updateBookings = async (req, res, next) => {
+    const { body, user } = req;
+
+    const isExist = await bookings.findOne({ userId: user._id, transactionId: body.transactionId });
+
+    if (!isExist) return next(new APIError(404, "Bookings Not found"));
+    if (isExist.status === "Delivered") return next(new APIError(409, "Bookings already delivered"));
+    isExist.status = "Delivered";
+
+    const { status, date, total } = await isExist.save();
+
+    res.status(200).json(new APIResponse(200, "success", "Status Updated Successfully", { booking: { status, date, total } }));
 }

@@ -10,12 +10,14 @@ const { isObjectId } = require(path.join(__dirname, "../auth/auth.js"));
 const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
 
 // Methods
-const { getBookings } = require(path.join(__dirname, "../representations/bookings.js"));
+const { getBookings, updateBookings } = require(path.join(__dirname, "../representations/bookings.js"));
 
 // Router
 const router = require("express").Router();
 
 router.use(isLoggedIn);
-router.route("/").get(asyncHandler(getBookings));
+router.route("/")
+    .get(asyncHandler(getBookings))
+    .patch(asyncHandler(updateBookings));
 
 module.exports = router;
