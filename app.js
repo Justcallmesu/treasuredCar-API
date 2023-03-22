@@ -22,8 +22,7 @@ const EPPP = require("express-parameter-polution-preventer");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss_clean = require("xss-clean");
-const cookie = require("cookie");
-const jwt = require("jsonwebtoken");
+
 
 // Development Tools
 const morgan = require("morgan");
@@ -60,8 +59,17 @@ const user = require(path.join(__dirname, "./routes/userRoutes.js"));
 // Websocket
 const { sendPrivate } = require(path.join(__dirname, "./routes/chatRoutes.js"));
 
-io.on("connection", function (socket) {
+// Web Socket Auth
+const { checkCookies, disconnected } = require(path.join(__dirname, "./auth/socketAuth.js"));
+
+
+io.on("connection", async function (socket) {
+    await io.use(checkCookies);
     sendPrivate(io, socket);
+
+    socket.on("disconnect", () => {
+        disconnected(socket);
+    })
 });
 
 // Server Check

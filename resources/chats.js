@@ -23,7 +23,6 @@ const chatSchema = mongoose.Schema({
     }]
 });
 
-
 chatSchema.pre(/^find/, (doc, next) => {
     doc.populate("users");
     next();
