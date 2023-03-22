@@ -26,19 +26,13 @@ exports.checkCookies = async (socket, next) => {
 
     const { userRefreshToken } = cookie.parse(socket.handshake.headers.cookie);
 
-    if (userRefreshToken) {
-        const { email } = jwt.verify(userRefreshToken, process.env.UserJWTRefreshTokenSecretKey);
-        const data = await users.findOne({ email });
-        socket.handshake.auth = { ...socket.handshake.auth, userId: data._id.toString() };
-        data.socketId = socket.id;
-        await data.save({ validateBeforeSave: false });
-    }
+    if (!userRefreshToken) return next(new APIError(400, "not Logged in"));
 
     next();
 }
 
 exports.disconnected = async (socket, next) => {
-    const { userId } = socket.handshake.auth;
+    const userId = socket.handshake.userId;
 
     const foundUser = await users.findOne({ _id: userId });
     if (foundUser) {

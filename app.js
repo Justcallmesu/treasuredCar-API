@@ -57,7 +57,7 @@ const transaction = require(path.join(__dirname, "./routes/transactionRoutes.js"
 const user = require(path.join(__dirname, "./routes/userRoutes.js"));
 
 // Websocket
-const { sendPrivate } = require(path.join(__dirname, "./routes/chatRoutes.js"));
+const { sendPrivate, createChat } = require(path.join(__dirname, "./socket/socketController.js"));
 
 // Web Socket Auth
 const { checkCookies, disconnected } = require(path.join(__dirname, "./auth/socketAuth.js"));
@@ -65,7 +65,10 @@ const { checkCookies, disconnected } = require(path.join(__dirname, "./auth/sock
 
 io.on("connection", async function (socket) {
     await io.use(checkCookies);
+
+    // Controllers
     sendPrivate(io, socket);
+    createChat(io, socket);
 
     socket.on("disconnect", () => {
         disconnected(socket);

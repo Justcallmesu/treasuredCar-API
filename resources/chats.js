@@ -20,12 +20,10 @@ const chatSchema = mongoose.Schema({
             type: String,
             required: [true, "chats must have a content"]
         }
+    },
+    {
+        default: []
     }]
-});
-
-chatSchema.pre(/^find/, (doc, next) => {
-    doc.populate("users");
-    next();
 });
 
 const chats = mongoose.model("chats", chatSchema);
