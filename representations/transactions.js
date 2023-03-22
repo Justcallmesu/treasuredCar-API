@@ -2,6 +2,7 @@ const path = require("path");
 
 // Models
 const transactions = require(path.join(__dirname, "../resources/transactions.js"));
+const bookings = require(path.join(__dirname, "../resources/bookings.js"));
 const users = require(path.join(__dirname, "../resources/users.js"));
 const cars = require(path.join(__dirname, "../resources/cars.js"));
 
@@ -75,9 +76,17 @@ exports.updateTransactionsStatus = async (req, res, next) => {
 
     if (!user) return next(new APIError(404, "User Not Found"));
 
-    const status = await transactions.findOneAndUpdate({ userId: user._id, carId: body.carId }, { new: true }).lean();
+    const transaction = await transactions.findOne({ userId: user._id, carId: body.carId });
 
-    if (!status) return next(new APIError(404, "Transaction Not Found"));
+    if (transaction.status === "paid") return next(new APIError(409, "Transactions already paid"));
 
-    res.status(200).json(new APIResponse(200, "success", "Status Updated Successfully", status));
+    if (!transaction) return next(new APIError(404, "Transaction Not Found"));
+
+    transaction.status = "paid";
+
+    await transaction.save();
+
+    const booking = await bookings.create({ userId: user._id, carId: body.carId, transactionId: transaction._id, total: 1900000 });
+
+    res.status(200).json(new APIResponse(200, "success", "Status Updated Successfully", { Transaction: transaction, booking }));
 }
