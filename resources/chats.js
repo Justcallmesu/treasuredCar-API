@@ -3,39 +3,29 @@ const mongoose = require("mongoose");
 
 // Schema
 const chatSchema = mongoose.Schema({
-    from: {
+    users: [{
         type: mongoose.Types.ObjectId,
-        required: [true, "Chat must have sender userId"],
         ref: "users"
-    },
-    to: {
-        type: mongoose.Types.ObjectId,
-        required: [true, "Chat must have target userID"],
-        ref: "users"
-    },
-    content: {
-        type: String,
-        required: [true, "Chat must have a content"],
-        validate: {
-            validator: function (v) {
-                return v !== "";
-            },
-            message: "Chat must not empty"
-        }
-    },
-    type: {
-        type: String,
-        enum: {
-            values: ["images", "string"],
-            message: "Values must only either images or string"
+    }],
+    chats: [{
+        to: {
+            type: String,
+            required: [true, "chats must have a target"]
         },
-        required: [true, "chat must have a type"]
-    }
+        from: {
+            type: String,
+            required: [true, "chats must have a from"]
+        },
+        content: {
+            type: String,
+            required: [true, "chats must have a content"]
+        }
+    }]
 });
 
 
 chatSchema.pre(/^find/, (doc, next) => {
-    doc.populate("to");
+    doc.populate("users");
     next();
 });
 

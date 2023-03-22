@@ -6,7 +6,13 @@ const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:8080",
+        credentials: true,
+    },
+    cookie: true
+});
 
 // NPM Modules
 const bodyParser = require("body-parser");
@@ -16,6 +22,8 @@ const EPPP = require("express-parameter-polution-preventer");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss_clean = require("xss-clean");
+const cookie = require("cookie");
+const jwt = require("jsonwebtoken");
 
 // Development Tools
 const morgan = require("morgan");
@@ -31,7 +39,8 @@ app.use(xss_clean());
 app.use(EPPP({
     join: "off"
 }));
-app.use(cors({ origin: "*" }))
+
+app.use(cors({ origin: "http://localhost:8080", credentials: true }))
 
 // Error Handler
 const errorHandler = require(path.join(__dirname, "./error/errorHandler.js"))
@@ -41,12 +50,19 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 
 // Router
-const chat = require(path.join(__dirname, "./routes/chatRoutes.js"));
+const { router } = require(path.join(__dirname, "./routes/chatRoutes.js"));
 const booking = require(path.join(__dirname, "./routes/bookingRoutes.js"));
 const car = require(path.join(__dirname, "./routes/carRoutes.js"));
 const seller = require(path.join(__dirname, "./routes/sellerRoutes.js"));
 const transaction = require(path.join(__dirname, "./routes/transactionRoutes.js"));
 const user = require(path.join(__dirname, "./routes/userRoutes.js"));
+
+// Websocket
+const { sendPrivate } = require(path.join(__dirname, "./routes/chatRoutes.js"));
+
+io.on("connection", function (socket) {
+    sendPrivate(io, socket);
+});
 
 // Server Check
 app.get("/", (req, res) => {
@@ -56,11 +72,15 @@ app.get("/", (req, res) => {
     });
 });
 
+// Cors
+app.options("*", cors({ origin: "http://localhost:8080" }));
+
+
 // Routing
 app.use("/api/v1/user", user);
 app.use("/api/v1/seller", seller);
 
-app.use("/api/v1/chat", chat);
+app.use("/api/v1/chat", router);
 
 app.use("/api/v1/transaction", transaction);
 app.use("/api/v1/booking", booking);
@@ -70,4 +90,4 @@ app.use("/api/v1/car", car);
 // Error Handling
 app.use("*", errorHandler)
 
-module.exports = { server, io };
+module.exports = { server };
