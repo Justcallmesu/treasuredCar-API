@@ -16,6 +16,12 @@ const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
 // Methods
 const { postCar, getCars, getCar, updateCar, deleteCar } = require(path.join(__dirname, "../representations/cars.js"));
 
+// Image Process
+const processImage = require(path.join(__dirname, "../methods/single-process/processImage.js"));
+
+// Multer 
+const { upload } = require(path.join(__dirname, "../app.js"));
+
 // Transactions Route
 router.use("/:_id/transactions", tranasctionsRoute);
 

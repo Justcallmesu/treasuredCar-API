@@ -5,11 +5,11 @@ const path = require("path");
 const JWT = require("jsonwebtoken");
 
 // Class
-const APIError = require(path.join(__dirname, "../class/APIerror.js"));
+const APIError = require(path.join(__dirname, "../../class/APIerror.js"));
 
 // Models
-const user = require(path.join(__dirname, "../resources/users.js"));
-const seller = require(path.join(__dirname, "../resources/sellers.js"));
+const user = require(path.join(__dirname, "../../resources/users.js"));
+const seller = require(path.join(__dirname, "../../resources/sellers.js"));
 
 // Auth Helper Functions
 const isRefreshTokenValid = async function (req, res, next, role) {

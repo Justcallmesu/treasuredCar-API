@@ -5,7 +5,7 @@ const path = require("path");
 const JWT = require("jsonwebtoken");
 
 // Class
-const APIError = require(path.join(__dirname, "../class/APIerror.js"));
+const APIError = require(path.join(__dirname, "../../class/APIerror.js"));
 
 function tokenIsValid(userToken, role) {
     const key = role === "user" ? process.env.UserJWTTokenSecretKey : process.env.SellerJWTTokenSecretKey;

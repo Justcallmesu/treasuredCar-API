@@ -13,7 +13,7 @@ const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
 const { updateMySeller, deleteMySeller } = require(path.join(__dirname, "../representations/sellers.js"));
 
 // Image Process
-const processImage = require(path.join(__dirname, "../methods/processImage.js"));
+const processImage = require(path.join(__dirname, "../methods/single-process/processImage.js"));
 
 // Multer 
 const { upload } = require(path.join(__dirname, "../app.js"));
