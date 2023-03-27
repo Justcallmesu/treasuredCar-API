@@ -9,8 +9,8 @@ const path = require("path");
 const user = require(path.join(__dirname, "../resources/users.js"));
 
 // Methods
-const isRefreshTokenValid = require(path.join(__dirname, "../methods/isRefreshTokenValid.js"));
-const tokenIsValid = require(path.join(__dirname, "../methods/validateToken.js"));
+const isRefreshTokenValid = require(path.join(__dirname, "../methods/auth-methods/isRefreshTokenValid.js"));
+const tokenIsValid = require(path.join(__dirname, "../methods/auth-methods/validateToken.js"));
 
 // Class
 const APIError = require(path.join(__dirname, "../class/APIerror.js"));

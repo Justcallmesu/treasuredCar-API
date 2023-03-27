@@ -52,8 +52,6 @@ const seller = require(path.join(__dirname, "./routes/sellerRoutes.js"));
 const transaction = require(path.join(__dirname, "./routes/transactionRoutes.js"));
 const user = require(path.join(__dirname, "./routes/userRoutes.js"));
 
-
-
 // Server Check
 app.get("/", (req, res) => {
     res.status(200).json({

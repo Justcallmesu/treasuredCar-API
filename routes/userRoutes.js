@@ -1,8 +1,6 @@
 // Core Modules
 const path = require("path");
 
-
-
 // Authorization Methods
 const { login, register } = require(path.join(__dirname, "../auth/users.js"));
 const { isLoggedIn } = require(path.join(__dirname, "../auth/UsersAuth.js"));
@@ -14,7 +12,7 @@ const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
 const { updateMyUser, deleteMyUser } = require(path.join(__dirname, "../representations/users.js"));
 
 // Image Process
-const processImage = require(path.join(__dirname, "../methods/processImage.js"));
+const processImage = require(path.join(__dirname, "../methods/single-process/processImage.js"));
 
 // Multer 
 const { upload } = require(path.join(__dirname, "../app.js"));
