@@ -32,6 +32,10 @@ const sellerSchema = mongoose.Schema(
             type: String,
             required: [true, "Seller must have a phone number"]
         },
+        address: {
+            type: String,
+            required: [true, "Seller Must have a address"]
+        },
         password: {
             type: String,
             required: [true, "Seller must have a password"],
