@@ -13,7 +13,7 @@ const EPPP = require("express-parameter-polution-preventer");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss_clean = require("xss-clean");
-
+const multer = require("multer");
 
 // Development Tools
 const morgan = require("morgan");
@@ -38,6 +38,12 @@ const errorHandler = require(path.join(__dirname, "./error/errorHandler.js"))
 // Parser
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Multer Instance
+const memoryStorage = multer.memoryStorage();
+const upload = multer({ dest: path.join(__dirname, "../public/users/"), storage: memoryStorage });
+module.exports = { upload };
 
 // Router
 const booking = require(path.join(__dirname, "./routes/bookingRoutes.js"));
@@ -45,6 +51,8 @@ const car = require(path.join(__dirname, "./routes/carRoutes.js"));
 const seller = require(path.join(__dirname, "./routes/sellerRoutes.js"));
 const transaction = require(path.join(__dirname, "./routes/transactionRoutes.js"));
 const user = require(path.join(__dirname, "./routes/userRoutes.js"));
+
+
 
 // Server Check
 app.get("/", (req, res) => {
