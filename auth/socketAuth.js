@@ -21,12 +21,22 @@ const users = require(path.join(__dirname, "../resources/users.js"));
 
 exports.checkCookies = async (socket, next) => {
     if (!socket.handshake.headers?.cookie) {
-        return next(new APIError(400, "not Logged in"));
+        return next(new APIError(401, "not Logged in"));
     }
 
     const { userRefreshToken } = cookie.parse(socket.handshake.headers.cookie);
 
-    if (!userRefreshToken) return next(new APIError(400, "not Logged in"));
+    if (!userRefreshToken) return next(new APIError(401, "not Logged in"));
+
+    const { email } = jwt.verify(userRefreshToken, process.env.UserJWTRefreshTokenSecretKey);
+
+    const data = await users.findOne({ email });
+
+    if (!data) return next(new APIError(404, "User Does not Exist"));
+
+    data.socketId = socket.id;
+
+    await data.save({ validateBeforeSave: false });
 
     next();
 }

@@ -4,15 +4,6 @@ const path = require("path");
 // App Initialization
 const express = require("express");
 const app = express();
-const server = require("http").createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server, {
-    cors: {
-        origin: "http://localhost:8080",
-        credentials: true,
-    },
-    cookie: true
-});
 
 // NPM Modules
 const bodyParser = require("body-parser");
@@ -49,31 +40,11 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 
 // Router
-const { router } = require(path.join(__dirname, "./routes/chatRoutes.js"));
 const booking = require(path.join(__dirname, "./routes/bookingRoutes.js"));
 const car = require(path.join(__dirname, "./routes/carRoutes.js"));
 const seller = require(path.join(__dirname, "./routes/sellerRoutes.js"));
 const transaction = require(path.join(__dirname, "./routes/transactionRoutes.js"));
 const user = require(path.join(__dirname, "./routes/userRoutes.js"));
-
-// Websocket
-const { sendPrivate, createChat } = require(path.join(__dirname, "./socket/socketController.js"));
-
-// Web Socket Auth
-const { checkCookies, disconnected } = require(path.join(__dirname, "./auth/socketAuth.js"));
-
-
-io.on("connection", async function (socket) {
-    await io.use(checkCookies);
-
-    // Controllers
-    sendPrivate(io, socket);
-    createChat(io, socket);
-
-    socket.on("disconnect", () => {
-        disconnected(socket);
-    })
-});
 
 // Server Check
 app.get("/", (req, res) => {
@@ -91,8 +62,6 @@ app.options("*", cors({ origin: "http://localhost:8080" }));
 app.use("/api/v1/user", user);
 app.use("/api/v1/seller", seller);
 
-app.use("/api/v1/chat", router);
-
 app.use("/api/v1/transaction", transaction);
 app.use("/api/v1/booking", booking);
 
@@ -101,4 +70,4 @@ app.use("/api/v1/car", car);
 // Error Handling
 app.use("*", errorHandler)
 
-module.exports = { server };
+module.exports = { app };
