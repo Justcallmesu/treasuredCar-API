@@ -1,9 +1,9 @@
 // Core Modules
 const path = require("path");
 
-
 // Router
 const router = require("express").Router();
+const tranasctionsRoute = require(path.join(__dirname, "./transactionRoutes.js"))
 
 // Authorization Methods
 const { isSeller } = require(path.join(__dirname, "../auth/SellersAuth.js"));
@@ -16,6 +16,10 @@ const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
 // Methods
 const { postCar, getCars, getCar, updateCar, deleteCar } = require(path.join(__dirname, "../representations/cars.js"));
 
+// Transactions Route
+router.use("/:_id/transactions", tranasctionsRoute);
+
+// Cars Route
 router.route("/")
     .get(getCars)
 

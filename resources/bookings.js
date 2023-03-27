@@ -5,11 +5,18 @@ const mongoose = require("mongoose");
 const bookingSchema = mongoose.Schema({
     userId: {
         type: mongoose.Types.ObjectId,
-        required: [true, "Booking must have a User"]
+        required: [true, "Booking must have a User"],
+        refs: "users"
     },
     carId: {
         type: mongoose.Types.ObjectId,
-        required: [true, "Booking must have a Car"]
+        required: [true, "Booking must have a Car"],
+        refs: "cars"
+    },
+    transactionId: {
+        type: mongoose.Types.ObjectId,
+        required: [true, "Booking must have a Transactions"],
+        refs: "transactions"
     },
     date: {
         type: Date,
@@ -21,7 +28,8 @@ const bookingSchema = mongoose.Schema({
             values: ["Undelivered", "Delivered"],
             message: "Values only can either Undelivered or Delivered"
         },
-        required: [true, "Bookings must have a status"]
+        required: [true, "Bookings must have a status"],
+        default: "Undelivered"
     },
     total: {
         type: Number,

@@ -55,12 +55,14 @@ userSchema.index({ email: 1 });
 
 // Middleware
 userSchema.pre("save", async function (next) {
-    try {
-        this.password = await bcrypt.hash(this.password, 12);
-        next();
-    } catch (error) {
-        next(error);
+    if (this.isModified("password")) {
+        try {
+            this.password = await bcrypt.hash(this.password, 12);
+        } catch (error) {
+            next(error);
+        }
     }
+    next();
 });
 
 
