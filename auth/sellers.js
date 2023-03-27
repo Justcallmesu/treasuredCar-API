@@ -7,9 +7,9 @@ const APIError = require(path.join(__dirname, "../class/APIerror.js"));
 const APIResponse = require(path.join(__dirname, "../class/APiResponse.js"));
 
 // Methods
-const sendToken = require(path.join(__dirname, "../methods/sendToken.js"));
-const isRefreshTokenValid = require(path.join(__dirname, "../methods/isRefreshTokenValid.js"));
-const validateBody = require(path.join(__dirname, "../methods/validateBody.js"));
+const sendToken = require(path.join(__dirname, "../methods/auth-methods/sendToken.js"));
+const isRefreshTokenValid = require(path.join(__dirname, "../methods/auth-methods/isRefreshTokenValid.js"));
+const validateBody = require(path.join(__dirname, "../methods/auth-methods/validateBody.js"));
 
 // Models
 const sellers = require(path.join(__dirname, "../resources/sellers.js"));
