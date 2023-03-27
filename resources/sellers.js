@@ -1,5 +1,11 @@
+// Core Modules
+const path = require("path");
+
 // NPM modules
 const bcrypt = require("bcrypt");
+
+// Class
+const APIError = require(path.join(__dirname, "../class/APIerror.js"));
 
 // Mongoose
 const mongoose = require("mongoose");
@@ -20,7 +26,11 @@ const sellerSchema = mongoose.Schema(
         email: {
             type: String,
             unique: true,
-            requird: [true, "Seller must have a email"]
+            required: [true, "Seller must have a email"]
+        },
+        phoneNumber: {
+            type: String,
+            required: [true, "Seller must have a phone number"]
         },
         password: {
             type: String,
@@ -49,6 +59,9 @@ const sellerSchema = mongoose.Schema(
         methods: {
             async comparePassword(candidate) {
                 return await bcrypt.compare(candidate, this.get("password"));
+            },
+            compareInfoChangeDate() {
+                return this.infoChangeCooldown < new Date(new Date().setDate(this.infoChangeCooldown.getDate() + 31));
             }
         }
     }
@@ -68,6 +81,20 @@ sellerSchema.pre("save", async function (next) {
     }
 });
 
+sellerSchema.pre("findOneAndUpdate", async function (next) {
+    const doc = await this.model.findOne(this.getQuery());
+
+    if (doc.compareInfoChangeDate()) {
+        const cooldownReset = new Date(new Date().setDate(doc.infoChangeCooldown.getDate() + 31))
+            .toLocaleDateString("EN-en", {
+                dateStyle: "full"
+            });
+        return next(new APIError(400, `You can only change info after 1 month prior last update, Cooldown Reset at ${cooldownReset}`));
+    }
+
+    this._update.infoChangeCooldown = Date.now();
+    next();
+})
 
 // Models
 const sellers = mongoose.model("sellers", sellerSchema);
