@@ -20,12 +20,11 @@ exports.isLoggedIn = async function (req, res, next) {
 
     if (!userRefreshToken) return next(new APIError(400, "Auth Not found"));
 
-
     if (!userToken && !await isRefreshTokenValid(req, res, next, "user")) return;
 
-    const tokenValid = tokenIsValid(res.locals?.cookies || userToken, "user");
+    const tokenValid = await tokenIsValid(res.locals?.cookies || userToken, "user");
 
-    if (!tokenIsValid && !await isRefreshTokenValid(req, res, next, "user")) return;
+    if (!tokenValid && !await isRefreshTokenValid(req, res, next, "user")) return;
 
     const founduser = await user.findOne({ email: tokenValid.email });
 

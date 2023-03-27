@@ -25,7 +25,7 @@ exports.isSeller = async function (req, res, next) {
 
     const tokenValid = tokenIsValid(res.locals?.cookies || sellerToken, "seller");
 
-    if (!tokenIsValid && !await isRefreshTokenValid(req, res, next, "seller")) return;
+    if (!tokenValid && !await isRefreshTokenValid(req, res, next, "seller")) return;
 
     const foundSellers = await sellers.findOne({ email: tokenValid.email });
 
