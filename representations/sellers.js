@@ -16,9 +16,11 @@ exports.updateMySeller = async (req, res, next) => {
 
     const { name, email, phoneNumber } = body;
 
-    const { name: sellerName, email: sellerEmail } = await sellers.findOneAndUpdate({ _id: seller._id }, { name, email, phoneNumber }, { new: true }).lean();
+    let query = !req.photo ? { name, email, phoneNumber } : { name, email, phoneNumber, photo: req.photo };
 
-    res.status(200).json(new APIResponse(201, "success", "Updated Successfully", { user: { sellerName, sellerEmail } }));
+    const { name: sellerName, email: sellerEmail, photo } = await sellers.findOneAndUpdate({ _id: seller._id }, query, { new: true }).lean();
+
+    res.status(200).json(new APIResponse(201, "success", "Updated Successfully", { seller: { sellerName, sellerEmail, photo } }));
 };
 
 exports.deleteMySeller = async (req, res, next) => {
