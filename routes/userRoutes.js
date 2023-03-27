@@ -31,7 +31,9 @@ router.use(asyncHandler(isLoggedIn));
 router.use("/myTransactions", transactionsRoute); //! Transactions Router
 router.use("/updateMyBookings", bookingRoutes); //! Update Bookings Router
 router.use("/myBookings", bookingRoutes); //! Bookings Router
-router.route("/me").patch(upload.single("photo"), processImage("users"), asyncHandler(updateMyUser));
+
+// Manage Users
+router.route("/me").patch(upload.single("photo"), asyncHandler(processImage("users")), asyncHandler(updateMyUser));
 router.route("/deleteme").delete(asyncHandler(deleteMyUser));
 
 

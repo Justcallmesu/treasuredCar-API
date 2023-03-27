@@ -14,7 +14,7 @@ async function compressImage(req, target, next) {
         return next(new APIError(400, "File is not an image"))
     }
 
-    const fileName = req.photo = `${target}-${target === "users" ? req.user._id : req.sellers._id}-${Date.now()}.jpeg`
+    const fileName = req.photo = `${target}-${target === "users" ? req.user._id : req.seller._id}-${Date.now()}.jpeg`
 
     await sharp(req.file.buffer)
         .resize({ height: 300, width: 300, fit: "outside" })

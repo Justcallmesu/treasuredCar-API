@@ -52,11 +52,6 @@ const sellerSchema = mongoose.Schema(
         infoChangeCooldown: {
             type: Date,
             default: Date.now()
-        },
-        ratings: {
-            type: Number,
-            default: 4,
-            required: [true, "Sellers must have a ratings"]
         }
     },
     {
@@ -65,7 +60,10 @@ const sellerSchema = mongoose.Schema(
                 return await bcrypt.compare(candidate, this.get("password"));
             },
             compareInfoChangeDate() {
-                return this.infoChangeCooldown < new Date(new Date().setDate(this.infoChangeCooldown.getDate() + 31));
+                const date = new Date(this.infoChangeCooldown);
+                date.setDate(this.infoChangeCooldown.getDate() + 30);
+
+                return Date.now() > date;
             }
         }
     }
@@ -87,12 +85,12 @@ sellerSchema.pre("save", async function (next) {
 
 sellerSchema.pre("findOneAndUpdate", async function (next) {
     const doc = await this.model.findOne(this.getQuery());
+    if (!doc.compareInfoChangeDate()) {
+        let cooldownReset = new Date(doc.infoChangeCooldown);
 
-    if (doc.compareInfoChangeDate()) {
-        const cooldownReset = new Date(new Date().setDate(doc.infoChangeCooldown.getDate() + 31))
-            .toLocaleDateString("EN-en", {
-                dateStyle: "full"
-            });
+        cooldownReset.setDate(doc.infoChangeCooldown.getDate() + 30);
+        cooldownReset = cooldownReset.toLocaleDateString("id-ID", { dateStyle: "long" });
+
         return next(new APIError(400, `You can only change info after 1 month prior last update, Cooldown Reset at ${cooldownReset}`));
     }
 
