@@ -35,10 +35,6 @@ const userSchema = mongoose.Schema(
             type: String,
             default: "default.jpg"
         },
-        socketId: {
-            type: String,
-            default: null
-        },
         passwordLastChanged: {
             type: String,
             default: Date.now(),

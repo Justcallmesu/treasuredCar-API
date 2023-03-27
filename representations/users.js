@@ -8,9 +8,6 @@ const users = require(path.join(__dirname, "../resources/users.js"));
 const APIError = require(path.join(__dirname, "../class/APIerror.js"));
 const APIResponse = require(path.join(__dirname, "../class/APIResponse.js"));
 
-// Methods
-const validateBody = require(path.join(__dirname, "../methods/validateBody.js"));
-
 exports.updateMyUser = async (req, res, next) => {
     const { body, user } = req;
 
@@ -18,9 +15,11 @@ exports.updateMyUser = async (req, res, next) => {
 
     const { name, email } = body;
 
-    const { name: userName, email: userEmail } = await users.findOneAndUpdate({ _id: user._id }, { name, email }, { new: true }).lean();
+    let query = !req.photo ? { name, email } : { name, email, photo: req.photo };
 
-    res.status(200).json(new APIResponse(201, "success", "Updated Successfully", { user: { userName, userEmail } }));
+    const { name: userName, email: userEmail, photo } = await users.findOneAndUpdate({ _id: user._id }, query, { new: true }).lean();
+
+    res.status(200).json(new APIResponse(201, "success", "Updated Successfully", { user: { userName, userEmail, photo } }));
 };
 
 exports.deleteMyUser = async (req, res, next) => {
