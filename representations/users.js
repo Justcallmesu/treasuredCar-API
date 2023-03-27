@@ -22,3 +22,11 @@ exports.updateMyUser = async (req, res, next) => {
 
     res.status(200).json(new APIResponse(201, "success", "Updated Successfully", { user: { userName, userEmail } }));
 };
+
+exports.deleteMyUser = async (req, res, next) => {
+    const { user } = req;
+
+    await users.findOneAndDelete({ _id: user._id });
+
+    res.status(204).end();
+}

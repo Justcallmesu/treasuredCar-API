@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 dotenv.config({ path: path.join(__dirname, ".env") });
 
 // App Instances
-const { server } = require(path.join(__dirname, "./app.js"));
+const { app } = require(path.join(__dirname, "./app.js"));
 
 // Mongoose Connection
 (async function () {
@@ -23,6 +23,6 @@ const { server } = require(path.join(__dirname, "./app.js"));
 
 
 // Server Listening
-server.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log("Server is running");
 });
