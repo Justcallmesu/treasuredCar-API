@@ -10,7 +10,7 @@ const QueryConstructor = require(path.join(__dirname, "../class/QueryConstructor
 const cars = require(path.join(__dirname, "../resources/cars.js"));
 
 // Methods
-const validateBody = require(path.join(__dirname, "../methods/validateBody.js"));
+const validateBody = require(path.join(__dirname, "../methods/auth-methods/validateBody.js"));
 
 exports.postCar = async function (req, res, next) {
     const { body, seller } = req;

@@ -1,4 +1,5 @@
 /node_modules
 /public/cars/*
 /public/users/*
+/public/sellers/*
 *.env
