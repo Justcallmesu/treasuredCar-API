@@ -20,14 +20,15 @@ exports.isLoggedIn = async function (req, res, next) {
 
     if (!userRefreshToken) return next(new APIError(400, "Auth Not found"));
 
-
     if (!userToken && !await isRefreshTokenValid(req, res, next, "user")) return;
 
-    const tokenValid = tokenIsValid(res.locals?.cookies || userToken, "user");
+    let tokenData = await tokenIsValid(res.locals?.cookies || userToken, "user");
 
-    if (!tokenIsValid && !await isRefreshTokenValid(req, res, next, "user")) return;
+    if (!tokenData && !await isRefreshTokenValid(req, res, next, "user")) return;
 
-    const founduser = await user.findOne({ email: tokenValid.email });
+    if (res.locals.cookies) tokenData = await tokenIsValid(res.locals?.cookies, "user")
+
+    const founduser = await user.findOne({ email: tokenData.email });
 
     if (!founduser) return next(new APIError(404, "Your data doesnt exist please Relogin"));
 

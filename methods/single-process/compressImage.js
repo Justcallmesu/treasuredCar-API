@@ -28,7 +28,8 @@ async function compressImage(req, target, next) {
         .resize({ height: 300, width: 300, fit: "outside" })
         .toFormat("jpeg")
         .jpeg({ quality: 80 })
-        .toFile(path.join(__dirname, `../public/${target}/${fileName}`));
+        .toFile(path.join(__dirname, `../../public/${target}/${fileName}`));
+
     return;
 }
 
