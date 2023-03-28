@@ -33,7 +33,10 @@ router.route("/:_id").get(isObjectId, getCar);
 
 router.use(asyncHandler(isLoggedIn), asyncHandler(isSeller));
 
-router.route("/").post(asyncHandler(postCar));
+router.route("/").post(upload.fields([
+    { name: "imageCover", maxCount: 1 },
+    { name: "image", maxCount: 4 }
+]), asyncHandler(postCar));
 
 router.use(isObjectId);
 
