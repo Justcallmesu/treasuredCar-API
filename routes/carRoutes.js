@@ -17,7 +17,7 @@ const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
 const { postCar, getCars, getCar, updateCar, deleteCar } = require(path.join(__dirname, "../representations/cars.js"));
 
 // Image Process
-const processImage = require(path.join(__dirname, "../methods/single-process/processImage.js"));
+const processMultipleImages = require(path.join(__dirname, "../methods/multiple-process/processMultipleImages.js"));
 
 // Multer 
 const { upload } = require(path.join(__dirname, "../app.js"));
@@ -33,7 +33,10 @@ router.route("/:_id").get(isObjectId, getCar);
 
 router.use(asyncHandler(isLoggedIn), asyncHandler(isSeller));
 
-router.route("/").post(asyncHandler(postCar));
+router.route("/").post(upload.fields([
+    { name: "imageCover", maxCount: 1 },
+    { name: "image", maxCount: 4 }
+]), processMultipleImages("cars"), asyncHandler(postCar));
 
 router.use(isObjectId);
 

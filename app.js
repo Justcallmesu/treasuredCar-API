@@ -38,7 +38,7 @@ const errorHandler = require(path.join(__dirname, "./error/errorHandler.js"))
 // Parser
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true, }));
 
 // Multer Instance
 const memoryStorage = multer.memoryStorage();
