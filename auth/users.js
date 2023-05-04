@@ -12,6 +12,7 @@ const users = require(path.join(__dirname, "../resources/users.js"));
 // Methods
 const sendToken = require(path.join(__dirname, "../methods/auth-methods/sendToken.js"));
 const validateBody = require(path.join(__dirname, "../methods/auth-methods/validateBody.js"));
+const generateOTP = require(path.join(__dirname, "../methods/OTP/otpGenerator.js"));
 
 
 exports.login = async function (req, res, next) {
