@@ -30,3 +30,13 @@ exports.deleteMySeller = async (req, res, next) => {
 
     res.status(204).end();
 }
+
+exports.getSeller = async (req, res, next) => {
+    const { params } = req;
+
+    const sellerData = await sellers.findOne({ _id: params._id }).select("-passwordChangedAt -infoChangeCooldown").lean();
+
+    if (!sellerData) return next(new APIError(404, "No Seller Found"));
+
+    res.status(200).json(new APIResponse(200, "success", "fetched successfully", sellerData));
+}

@@ -85,14 +85,6 @@ sellerSchema.pre("save", async function (next) {
 
 sellerSchema.pre("findOneAndUpdate", async function (next) {
     const doc = await this.model.findOne(this.getQuery());
-    // if (!doc.compareInfoChangeDate()) {
-    //     let cooldownReset = new Date(doc.infoChangeCooldown);
-
-    //     cooldownReset.setDate(doc.infoChangeCooldown.getDate() + 30);
-    //     cooldownReset = cooldownReset.toLocaleDateString("id-ID", { dateStyle: "long" });
-
-    //     return next(new APIError(400, `You can only change info after 1 month prior last update, Cooldown Reset at ${cooldownReset}`));
-    // }
 
     this._update.infoChangeCooldown = Date.now();
     next();

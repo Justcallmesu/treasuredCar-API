@@ -1,3 +1,6 @@
+// Validator
+const { isValidObjectId } = require("mongoose");
+
 class APiData {
     constructor(models, urlQuery) {
         this.mongoQuery = models;
@@ -18,15 +21,25 @@ class APiData {
             const excludedQuery = ["page", "sort", "limit", "fields"];
             const includedQuery = ["name", "model", "bodyType", "ATMT", "brand", "price", "cc", "coordinates", "sellerId"];
             excludedQuery.forEach((value) => delete query[value]);
+            try {
 
-            Object.keys(query).forEach((value) => {
-                if (value === "name" || value === "brand") {
-                    query[value] = {
-                        "$regex": new RegExp(`(${query[value]})`, "i")
+                Object.keys(query).forEach((value) => {
+                    if (value === "name" || value === "brand") {
+                        query[value] = {
+                            "$regex": new RegExp(`(${query[value]})`, "i")
+                        }
                     }
-                }
-                if (!includedQuery.includes(value)) delete query[value];
-            });
+
+                    // Prevent Error when objectId isnt valid
+                    if (value === "sellerId" && !isValidObjectId(value)) {
+                        delete query[value];
+                    }
+
+                    if (!includedQuery.includes(value)) delete query[value];
+                });
+            } catch (error) {
+                console.log(error);
+            }
 
             if ("coordinates" in query) {
                 const [longitude, latitude] = query.coordinates.split(",");
