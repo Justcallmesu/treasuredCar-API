@@ -29,7 +29,7 @@ exports.isSeller = async function (req, res, next) {
 
     if (res.locals.cookies) tokenValid = await tokenIsValid(res.locals?.cookies, "seller")
 
-    const foundSellers = await sellers.findOne({ email: tokenValid.email });
+    const foundSellers = await sellers.findOne({ email: tokenValid.email }).lean();
 
     if (!foundSellers) return next(new APIError(404, "Your data doesnt exist please Relogin"));
 
