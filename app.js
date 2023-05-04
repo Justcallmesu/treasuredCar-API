@@ -14,6 +14,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss_clean = require("xss-clean");
 const multer = require("multer");
+const limit = require("express-rate-limit");
 
 // Development Tools
 const morgan = require("morgan");
@@ -29,6 +30,13 @@ app.use(xss_clean());
 app.use(EPPP({
     join: "off"
 }));
+
+app.use(limit.rateLimit(
+    {
+        skipFailedRequests: true,
+        max: 40
+    }
+))
 
 app.use(cors({ origin: "http://localhost:8080", credentials: true }))
 

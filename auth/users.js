@@ -1,5 +1,6 @@
 // NPm Modules
 const path = require("path");
+const isRefreshTokenValid = require("../methods/auth-methods/isRefreshTokenValid");
 
 // Class
 const APIError = require(path.join(__dirname, "../class/APIerror.js"));
@@ -20,6 +21,8 @@ exports.login = async function (req, res, next) {
     if (validateBody(body, 2, next)) return;
 
     if (!("email" in body) || !("password" in body)) return next(new APIError(400, "There is unknown data attached to the body"));
+
+    if (body.password.length < 8) return next(new APIError(400, "Password Length must 8 or more characters"));
 
     const foundUser = await users.findOne({ email: body.email }).select("+password");
 
@@ -42,6 +45,8 @@ exports.register = async function (req, res, next) {
 
     if (body.password !== body.confirmPassword) return next(new APIError(400, "Password And confirm password doesnt match"));
 
+    if (body.password.length < 8 && body.confirmPassword.lenth < 8) return next(new APIError(400, "Password Length must 8 or more characters"));
+
     const isEmailExist = await users.findOne({ email: body.email });
 
     if (isEmailExist) return next(new APIError(409, "Email already used !"));
@@ -49,5 +54,9 @@ exports.register = async function (req, res, next) {
     const { name, email } = await users.create(body);
 
     sendToken(req, res, email, new APIResponse(201, "success", "User created successfully", { user: { name, email } }, "user"));
+}
 
+exports.getCredentials = async function (req, res, next) {
+    await isRefreshTokenValid(req, res, next, "user");
+    res.status(200).end();
 }

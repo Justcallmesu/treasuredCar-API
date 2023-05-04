@@ -17,5 +17,5 @@ function productionErrorHandler(err, req, res, next) {
 module.exports = function (err, req, res, next) {
     if (process.env.NODE_ENV === "production") return productionErrorHandler(err, req, res, next);
     console.log(err);
-    return res.status(500).json(err);
+    return res.status(400).json(err);
 }
