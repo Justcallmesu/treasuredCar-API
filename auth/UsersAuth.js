@@ -28,7 +28,7 @@ exports.isLoggedIn = async function (req, res, next) {
 
     if (res.locals.cookies) tokenData = await tokenIsValid(res.locals?.cookies, "user")
 
-    const founduser = await user.findOne({ email: tokenData.email });
+    const founduser = await user.findOne({ email: tokenData.email }).lean();
 
     if (!founduser) return next(new APIError(404, "Your data doesnt exist please Relogin"));
 

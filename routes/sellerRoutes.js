@@ -1,11 +1,11 @@
 // Core Modules
 const path = require('path');
-const { isObjectId } = require('../auth/auth');
 
 // Auth
 const { registerSeller, loginSeller } = require(path.join(__dirname, "../auth/sellers.js"));
 const { isLoggedIn } = require(path.join(__dirname, "../auth/UsersAuth.js"));
 const { isSeller } = require(path.join(__dirname, "../auth/SellersAuth.js"));
+const { isObjectId } = require('../auth/auth');
 
 // Error Handler
 const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
