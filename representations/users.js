@@ -29,3 +29,11 @@ exports.deleteMyUser = async (req, res, next) => {
 
     res.status(204).end();
 }
+
+exports.getUser = async (req, res, next) => {
+    const { user } = req;
+
+    if (!user) return next(new APIError(404, "No User Found"));
+
+    res.status(200).json(new APIResponse(200, "success", "fetched successfully", user));
+}
