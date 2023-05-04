@@ -8,7 +8,7 @@ const deleteOldImage = require(path.join(__dirname, "./deleteOldImage.js"));
 function processImage(target) {
     return async (req, res, next) => {
         await compressImage(req, target, next);
-        await deleteOldImage(req, target);
+        if (target !== "cars") await deleteOldImage(req, target);
         next();
     }
 }

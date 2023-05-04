@@ -2,7 +2,7 @@
 const path = require("path");
 
 // Class
-const APIError = require(path.join(__dirname, "../class/APIerror.js"));
+const APIError = require(path.join(__dirname, "../../class/APIerror.js"));
 
 
 /***

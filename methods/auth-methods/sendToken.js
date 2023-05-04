@@ -37,7 +37,6 @@ async function sendToken(req, res, email, data, role = "user") {
             sameSite: false
         })
         .cookie(`${role}Token`, token, {
-            httpOnly: true,
             sameSite: false
         })
         .status(data.statusCode).json(data);

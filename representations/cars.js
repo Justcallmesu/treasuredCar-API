@@ -10,16 +10,24 @@ const QueryConstructor = require(path.join(__dirname, "../class/QueryConstructor
 const cars = require(path.join(__dirname, "../resources/cars.js"));
 
 // Methods
-const validateBody = require(path.join(__dirname, "../methods/validateBody.js"));
+const validateBody = require(path.join(__dirname, "../methods/auth-methods/validateBody.js"));
 
 exports.postCar = async function (req, res, next) {
     const { body, seller } = req;
 
+    const convertedData = JSON.parse(JSON.stringify(body));
+
+    for (const keys of Object.keys(convertedData)) {
+        try {
+            convertedData[keys] = JSON.parse(convertedData[keys]);
+        } catch {
+            continue;
+        }
+    }
+
     if (!Object.keys(body).length) return next(new APIError(400, "Must contain data"));
 
-    if (validateBody(body, 11, next)) return;
-
-    const { _doc } = await cars.create({ sellerId: seller._id, ...body });
+    const { _doc } = await cars.create({ sellerId: seller._id, ...convertedData });
 
     return res.status(201).json(new APIResponse(200, "success", "Car Successfully Created", _doc));
 };

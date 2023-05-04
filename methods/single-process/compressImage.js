@@ -5,7 +5,7 @@ const path = require("path");
 const sharp = require("sharp");
 
 // Class
-const APIError = require(path.join(__dirname, "../class/APIerror.js"));
+const APIError = require(path.join(__dirname, "../../class/APIerror.js"));
 
 async function compressImage(req, target, next) {
     if (!req.file) return;
@@ -14,13 +14,19 @@ async function compressImage(req, target, next) {
         return next(new APIError(400, "File is not an image"))
     }
 
-    const fileName = req.photo = `${target}-${target === "users" ? req.user._id : req.seller._id}-${Date.now()}.jpeg`
+    let uniqueId = "";
+
+    if (target === "users") uniqueId = req.user._id;
+    if (target === "sellers") uniqueId = req.seller._id;
+
+    const fileName = req.photo = `${target}-${uniqueId}-${Date.now()}.jpeg`
 
     await sharp(req.file.buffer)
         .resize({ height: 300, width: 300, fit: "outside" })
         .toFormat("jpeg")
         .jpeg({ quality: 80 })
-        .toFile(path.join(__dirname, `../public/${target}/${fileName}`));
+        .toFile(path.join(__dirname, `../../public/${target}/${fileName}`));
+
     return;
 }
 

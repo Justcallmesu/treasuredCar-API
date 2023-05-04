@@ -14,6 +14,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss_clean = require("xss-clean");
 const multer = require("multer");
+const limit = require("express-rate-limit");
 
 // Development Tools
 const morgan = require("morgan");
@@ -30,6 +31,13 @@ app.use(EPPP({
     join: "off"
 }));
 
+app.use(limit.rateLimit(
+    {
+        skipFailedRequests: true,
+        max: 40
+    }
+))
+
 app.use(cors({ origin: "http://localhost:8080", credentials: true }))
 
 // Error Handler
@@ -38,7 +46,7 @@ const errorHandler = require(path.join(__dirname, "./error/errorHandler.js"))
 // Parser
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true, }));
 
 // Multer Instance
 const memoryStorage = multer.memoryStorage();
@@ -51,8 +59,6 @@ const car = require(path.join(__dirname, "./routes/carRoutes.js"));
 const seller = require(path.join(__dirname, "./routes/sellerRoutes.js"));
 const transaction = require(path.join(__dirname, "./routes/transactionRoutes.js"));
 const user = require(path.join(__dirname, "./routes/userRoutes.js"));
-
-
 
 // Server Check
 app.get("/", (req, res) => {
