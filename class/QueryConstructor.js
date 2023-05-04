@@ -16,7 +16,7 @@ class APiData {
         if (this.urlQuery) {
             const query = { ...this.urlQuery };
             const excludedQuery = ["page", "sort", "limit", "fields"];
-            const includedQuery = ["name", "model", "bodyType", "ATMT", "brand", "price", "cc", "coordinates"];
+            const includedQuery = ["name", "model", "bodyType", "ATMT", "brand", "price", "cc", "coordinates", "sellerId"];
             excludedQuery.forEach((value) => delete query[value]);
 
             Object.keys(query).forEach((value) => {
