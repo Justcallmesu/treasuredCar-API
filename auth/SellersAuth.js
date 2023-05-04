@@ -9,8 +9,8 @@ const path = require("path");
 const sellers = require(path.join(__dirname, "../resources/sellers.js"));
 
 // Methods
-const isRefreshTokenValid = require(path.join(__dirname, "../methods/isRefreshTokenValid.js"));
-const tokenIsValid = require(path.join(__dirname, "../methods/validateToken.js"));
+const isRefreshTokenValid = require(path.join(__dirname, "../methods/auth-methods/isRefreshTokenValid.js"));
+const tokenIsValid = require(path.join(__dirname, "../methods/auth-methods/validateToken.js"));
 
 // Class
 const APIError = require(path.join(__dirname, "../class/APIerror.js"));
@@ -23,9 +23,11 @@ exports.isSeller = async function (req, res, next) {
 
     if (!sellerToken && !await isRefreshTokenValid(req, res, next, "seller")) return;
 
-    const tokenValid = tokenIsValid(res.locals?.cookies || sellerToken, "seller");
+    const tokenValid = await tokenIsValid(res.locals?.cookies || sellerToken, "seller");
 
-    if (!tokenIsValid) return;
+    if (!tokenValid && !await isRefreshTokenValid(req, res, next, "seller")) return;
+
+    if (res.locals.cookies) tokenValid = await tokenIsValid(res.locals?.cookies, "seller")
 
     const foundSellers = await sellers.findOne({ email: tokenValid.email });
 
