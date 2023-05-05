@@ -10,7 +10,7 @@ const { isObjectId } = require('../auth/auth');
 const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
 
 // Methods
-const { updateMyUser, deleteMyUser, getUser } = require(path.join(__dirname, "../representations/users.js"));
+const { updateMyUser, deleteMyUser, getUser, changeMyPassword } = require(path.join(__dirname, "../representations/users.js"));
 
 // Image Process
 const processImage = require(path.join(__dirname, "../methods/single-process/processImage.js"));
@@ -40,6 +40,7 @@ router.use("/updateMyBookings", bookingRoutes); //! Update Bookings Router
 router.use("/myBookings", bookingRoutes); //! Bookings Router
 
 // Manage Users
+router.route("/changeMyPassword").patch(asyncHandler(isLoggedIn), asyncHandler(changeMyPassword));
 router.route("/updateMe").patch(upload.single("photo"), asyncHandler(processImage("users")), asyncHandler(updateMyUser));
 router.route("/deleteme").delete(asyncHandler(deleteMyUser));
 
