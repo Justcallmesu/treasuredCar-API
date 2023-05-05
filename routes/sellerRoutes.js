@@ -2,7 +2,7 @@
 const path = require('path');
 
 // Auth
-const { registerSeller, loginSeller } = require(path.join(__dirname, "../auth/sellers.js"));
+const { registerSeller, loginSeller, forgotPassword, changePassword } = require(path.join(__dirname, "../auth/sellers.js"));
 const { isLoggedIn } = require(path.join(__dirname, "../auth/UsersAuth.js"));
 const { isSeller } = require(path.join(__dirname, "../auth/SellersAuth.js"));
 const { isObjectId } = require('../auth/auth');
@@ -11,7 +11,7 @@ const { isObjectId } = require('../auth/auth');
 const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
 
 // Methods
-const { updateMySeller, deleteMySeller, getSeller, getMySeller } = require(path.join(__dirname, "../representations/sellers.js"));
+const { updateMySeller, deleteMySeller, getSeller, getMySeller, changeMyPassword } = require(path.join(__dirname, "../representations/sellers.js"));
 
 // Image Process
 const processImage = require(path.join(__dirname, "../methods/single-process/processImage.js"));
@@ -28,6 +28,10 @@ const bookingRoutes = require(path.join(__dirname, "./bookingRoutes.js"));
 router.route("/register").post(asyncHandler(isLoggedIn), asyncHandler(registerSeller));
 router.route("/login").post(asyncHandler(isLoggedIn), asyncHandler(loginSeller));
 
+// Forgot Password
+router.route("/forgotPassword").patch(asyncHandler(forgotPassword));
+router.route("/changePassword").patch(asyncHandler(changePassword));
+
 // Get Seller Data
 router.route("/me").get(asyncHandler(isSeller), asyncHandler(getMySeller));
 router.use(asyncHandler(isLoggedIn), asyncHandler(isSeller));
@@ -35,6 +39,7 @@ router.use("/myTransactions", transactionsRoute); //! Transactions Router
 router.use("/myBookings", bookingRoutes); //! Transactions Router
 
 // Manipulate Seller Data
+router.route("/changeMyPassword").patch(asyncHandler(isLoggedIn), asyncHandler(isSeller), asyncHandler(changeMyPassword));
 router.route("/updateMe").patch(upload.single("photo"), asyncHandler(processImage("sellers")), asyncHandler(updateMySeller));
 router.route("/deleteme").delete(asyncHandler(deleteMySeller));
 

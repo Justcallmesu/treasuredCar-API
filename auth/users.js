@@ -101,11 +101,11 @@ exports.forgotPassword = async function (req, res, next) {
 exports.changePassword = async (req, res, next) => {
     const { body } = req;
 
-    if (!("email" in body) || !("otpCode" in body) || !("type" in body) || !("password" in body) || !("confirmPassword" in body)) return next(new APIError(400, "Missing Data"));
+    if (!("email" in body) || !("otpCode" in body) || !("password" in body) || !("confirmPassword" in body)) return next(new APIError(400, "Missing Data"));
 
-    const { email, otpCode, type, password, confirmPassword } = body;
+    const { email, otpCode, password, confirmPassword } = body;
 
-    const foundOTP = await otp.findOne({ email, otp: otpCode, type }).lean();
+    const foundOTP = await otp.findOne({ email, otp: otpCode, type: "User" }).lean();
 
     if (!foundOTP) return next(new APIError(401, "OTP May Invalid"));
 
