@@ -19,6 +19,6 @@ const { findOtp } = require(path.join(__dirname, "../representations/otp.js"));
 
 
 // Routing
-router.post("/", findOtp);
+router.post("/", asyncHandler(findOtp));
 
 module.exports = router;

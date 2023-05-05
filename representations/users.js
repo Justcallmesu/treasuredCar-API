@@ -23,9 +23,25 @@ exports.updateMyUser = async (req, res, next) => {
 };
 
 exports.deleteMyUser = async (req, res, next) => {
-    const { user } = req;
+    const { user: { email } } = req;
 
-    await users.findOneAndDelete({ _id: user._id });
+    const otpCode = generateOTP();
+
+    await otp.create({
+        otp: otpCode,
+        email,
+        type: "User",
+        actions: "delete"
+    })
+
+    sendEmail({
+        email,
+        subject: "OTP Code - Dont Share",
+        message: `Hello there this is your OTP Code for Delete Account, it expires after 1 hour be quick : ${otpCode}`
+    })
+
+    res.status(201).json(new APIResponse(200, "success", "Account created, OTP sent to the email"));
+
 
     res.status(204).end();
 }

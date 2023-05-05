@@ -20,7 +20,14 @@ const userMethod = {
     }
 }
 
-
+const sellerMethod = {
+    register: async (email) => {
+        await sellers.updateOne({ email }, { isActive: true });
+    },
+    delete: async (email) => {
+        await sellers.deleteOne({ email });
+    }
+}
 
 exports.findOtp = async (req, res, next) => {
     if (!req.body) return next(new APIError(400, "Body Must not Empty"));
@@ -32,6 +39,9 @@ exports.findOtp = async (req, res, next) => {
     if (!data) return next(new APIError(401, "OTP may invalid"));
 
     if (data.type === "User") userMethod[data.actions](email);
+    if (data.type === "Seller") sellerMethod[data.actions](email);
+
+    await otp.deleteOne({ _id: data._id })
 
     res.status(200).json(new APIResponse(200, "success", "OTP Match"));
 }

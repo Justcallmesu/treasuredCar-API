@@ -52,6 +52,10 @@ const sellerSchema = mongoose.Schema(
         infoChangeCooldown: {
             type: Date,
             default: Date.now()
+        },
+        isActive: {
+            type: Boolean,
+            default: false
         }
     },
     {
