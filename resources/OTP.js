@@ -2,6 +2,10 @@
 const mongoose = require("mongoose");
 
 const otpSchema = mongoose.Schema({
+    otp: {
+        type: String,
+        required: [true, "OTP must have a code"]
+    },
     email: {
         type: String,
         required: [true, "OTP must have an email Target"]
@@ -21,11 +25,25 @@ const otpSchema = mongoose.Schema({
             values: ["delete", "register", "forgotPassword"],
             message: "actions must either delete, register or forgotPassword"
         }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
     }
 })
 
 // Indexes
-otpSchema.index({ email: 1 });
+otpSchema.index({ email: 1, otp: 1 });
+
+// IF otp left for 1 h delete it automaticaly
+otpSchema.index(
+    {
+        createdAt: 1
+    },
+    {
+        expires: "1h"
+    }
+)
 
 const otp = mongoose.model("OTP", otpSchema);
 
