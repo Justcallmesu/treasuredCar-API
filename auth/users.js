@@ -29,7 +29,8 @@ exports.login = async function (req, res, next) {
 
     const foundUser = await users.findOne({ email: body.email }).select("+password");
 
-    if (!foundUser) return next(new APIError(400, "Your email or password is incorrect"));
+    if (!foundUser || !foundUser?.isActive) return next(new APIError(400, "Your email or password is incorrect"));
+
     if (!(await foundUser.comparePassword(body.password))) return next(new APIError(400, "Your email or password is incorrect"));
 
     sendToken(req, res, body.email, new APIResponse(200, "success", "login Successfully"), "user");
