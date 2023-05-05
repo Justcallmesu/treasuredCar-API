@@ -56,7 +56,7 @@ const isRefreshTokenValid = async function (req, res, next, role) {
         expiresIn: expires
     });
 
-    res.cookie(`${role}Token`, jwt, { sameSite: false });
+    res.cookie(`${role}Token`, jwt, { sameSite: "none" });
     res.locals.cookies = jwt;
     return true;
 }
