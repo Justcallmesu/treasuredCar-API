@@ -58,6 +58,31 @@ exports.getSeller = async (req, res, next) => {
     res.status(200).json(new APIResponse(200, "success", "fetched successfully", sellerData));
 }
 
+exports.changeMyPassword = async (req, res, next) => {
+    const { seller, body } = req;
+
+    if (!body) return next(new APIError(400, "Please attach a data"));
+
+    const { password, confirmPassword, oldPassword } = body;
+
+    if (!password || !confirmPassword || !oldPassword) return next(new APIError(400, "Missing data"));
+
+    const foundSeller = await sellers.findOne({ _id: seller._id }).select("+password");
+
+    if (!await foundSeller.comparePassword(oldPassword)) return next(new APIError(401, "Wrong Password"));
+
+    if (body.password !== body.confirmPassword) return next(new APIError(400, "Password And confirm password doesnt match"));
+
+    if (body.password.length < 8 && body.confirmPassword.lenth < 8) return next(new APIError(400, "Password Length must 8 or more characters"));
+
+    foundSeller.password = password;
+
+    await foundSeller.save();
+
+    res.status(201).json(new APIResponse(200, "success", "Password Changed"));
+
+}
+
 exports.getMySeller = async (req, res, next) => {
     const { seller } = req;
     console.log(req);
