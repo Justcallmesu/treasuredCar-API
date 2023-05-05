@@ -38,7 +38,7 @@ app.use(limit.rateLimit(
     }
 ))
 
-app.use(cors({ origin: "*", credentials: true }))
+app.use(cors({ origin: "http://localhost:8080", credentials: true }))
 
 // Error Handler
 const errorHandler = require(path.join(__dirname, "./error/errorHandler.js"))
