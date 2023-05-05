@@ -8,6 +8,7 @@ function constructError(err) {
     console.log(err);
     if (err.type === "entity.parse.failed") return new APIError(400, "Invalid JSON Data");
     if (err.name === 'TokenExpiredError') return new APIError(401, "Session Expired Please Relogin");
+    if (err.code === 11000) return new APIError(401, "Duplicate Data");
 }
 
 function productionErrorHandler(err, req, res, next) {
