@@ -70,9 +70,7 @@ exports.getTransactions = async (req, res, next) => {
 }
 
 exports.updateTransactionsStatus = async (req, res, next) => {
-    const { body } = req;
-
-    const user = await users.findOne({ email: body.email });
+    const { user } = req;
 
     if (!user) return next(new APIError(404, "User Not Found"));
 
@@ -85,7 +83,7 @@ exports.updateTransactionsStatus = async (req, res, next) => {
     const foundCars = await cars.findOne({ _id: body.carId });
 
     if (!foundCars) return next(new APIError(404, "No Car Found"));
-    console.log(foundCars);
+
     const booking = await bookings.create({ userId: user._id, carId: body.carId, transactionId: transaction._id, total: foundCars.price });
 
     transaction.status = "paid";
