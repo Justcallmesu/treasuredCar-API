@@ -3,7 +3,7 @@ const path = require("path");
 
 // Class
 const APIError = require(path.join(__dirname, "../class/APIerror.js"));
-const APIResponse = require(path.join(__dirname, "../class/APiResponse.js"));
+const APIResponse = require(path.join(__dirname, "../class/APIResponse.js"));
 
 // Model
 const otp = require(path.join(__dirname, "../resources/OTP.js"));

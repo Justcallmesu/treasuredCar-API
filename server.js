@@ -14,7 +14,7 @@ const { app } = require(path.join(__dirname, "./app.js"));
 // Mongoose Connection
 (async function () {
     try {
-        await mongoose.connect("mongodb://localhost:27017/treasuredcar");
+        await mongoose.connect(process.env.NODE_ENV === "production" ? process.env.ATLASCONNECT : "mongodb://localhost:27017/treasuredcar");
         console.log("Database Connected");
     } catch (error) {
         console.log("Database Failed to Connect")

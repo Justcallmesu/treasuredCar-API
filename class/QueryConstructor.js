@@ -1,7 +1,7 @@
 // Validator
 const { isValidObjectId } = require("mongoose");
 
-class APiData {
+class APIData {
     constructor(models, urlQuery) {
         this.mongoQuery = models;
         this.urlQuery = urlQuery;
@@ -78,4 +78,4 @@ class APiData {
 
 }
 
-module.exports = APiData;
+module.exports = APIData;
