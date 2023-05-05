@@ -36,7 +36,7 @@ exports.findOtp = async (req, res, next) => {
 
     if (!email || !otpCode || !type) return next(new APIError(400, "Missing Data"));
 
-    if (!type !== "User" || !type !== "Seller") return next(new APIError(400, "Invalid Type"));
+    if (type !== "User" && type !== "Seller") return next(new APIError(400, "Invalid Type"));
 
     const data = await otp.findOne({ email, otp: otpCode, type }).lean();
 
