@@ -3,11 +3,15 @@ const path = require("path");
 
 // Models
 const sellers = require(path.join(__dirname, "../resources/sellers.js"));
+const otp = require(path.join(__dirname, "../resources/OTP.js"));
 
 // Class
 const APIError = require(path.join(__dirname, "../class/APIerror.js"));
 const APIResponse = require(path.join(__dirname, "../class/APIResponse.js"));
 
+// Methods
+const generateOTP = require(path.join(__dirname, "../methods/OTP/otpGenerator.js"));
+const sendEmail = require(path.join(__dirname, "../methods/OTP/emailSender.js"));
 
 exports.updateMySeller = async (req, res, next) => {
     const { body, seller } = req;
@@ -26,9 +30,22 @@ exports.updateMySeller = async (req, res, next) => {
 exports.deleteMySeller = async (req, res, next) => {
     const { seller } = req;
 
-    await sellers.findOneAndDelete({ _id: seller._id });
+    const otpCode = generateOTP();
 
-    res.status(204).end();
+    await otp.create({
+        otp: otpCode,
+        email: seller.email,
+        type: "Seller",
+        actions: "delete"
+    })
+
+    sendEmail({
+        email: seller.email,
+        subject: "OTP Code - Dont Share",
+        message: `Hello there this is your OTP Code for Delete, it expires after 1 hour be quick : ${otpCode}`
+    })
+
+    res.status(200).json(new APIResponse(200, "success", "Account On Delete, OTP sent to the email"));
 }
 
 exports.getSeller = async (req, res, next) => {
