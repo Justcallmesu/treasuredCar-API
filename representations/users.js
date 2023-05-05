@@ -40,10 +40,32 @@ exports.deleteMyUser = async (req, res, next) => {
         message: `Hello there this is your OTP Code for Delete Account, it expires after 1 hour be quick : ${otpCode}`
     })
 
-    res.status(201).json(new APIResponse(200, "success", "Account created, OTP sent to the email"));
+    res.status(200).json(new APIResponse(200, "success", "Account On Delete, OTP sent to the email"));
+}
 
+exports.changeMyPassword = async (req, res, next) => {
+    const { user, body } = req;
 
-    res.status(204).end();
+    if (!body) return next(new APIError(400, "Please attach a data"));
+
+    const { password, confirmPassword, oldPassword } = body;
+
+    if (!password || !confirmPassword || !oldPassword) return next(new APIError(400, "Missing data"));
+
+    const foundUser = await users.findOne({ _id: user._id }).select("+password");
+
+    if (!await foundUser.comparePassword(oldPassword)) return next(new APIError(401, "Wrong Password"));
+
+    if (body.password !== body.confirmPassword) return next(new APIError(400, "Password And confirm password doesnt match"));
+
+    if (body.password.length < 8 && body.confirmPassword.lenth < 8) return next(new APIError(400, "Password Length must 8 or more characters"));
+
+    foundUser.password = password;
+
+    await foundUser.save();
+
+    res.status(201).json(new APIResponse(200, "success", "Password Changed"));
+
 }
 
 exports.getUser = async (req, res, next) => {
