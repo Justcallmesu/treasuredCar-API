@@ -4,7 +4,7 @@ const path = require("path");
 // Authorization Methods
 const { login, register, getCredentials, forgotPassword, changePassword } = require(path.join(__dirname, "../auth/users.js"));
 const { isLoggedIn } = require(path.join(__dirname, "../auth/UsersAuth.js"));
-const { isObjectId } = require('../auth/auth');
+const { logOut } = require('../auth/auth');
 
 // Error Handler
 const asyncHandler = require(path.join(__dirname, "../error/AsyncHandler.js"))
@@ -44,5 +44,7 @@ router.route("/changeMyPassword").patch(asyncHandler(isLoggedIn), asyncHandler(c
 router.route("/updateMe").patch(upload.single("photo"), asyncHandler(processImage("users")), asyncHandler(updateMyUser));
 router.route("/deleteme").delete(asyncHandler(deleteMyUser));
 
+// LogOut
+router.route("/logout").get(logOut)
 
 module.exports = router;

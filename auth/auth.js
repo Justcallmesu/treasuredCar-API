@@ -14,3 +14,12 @@ exports.isObjectId = (req, res, next) => {
 
     return next(new APIError(400, "Invalid Object ID"));
 }
+
+exports.logOut = (req, res, next) => {
+    res
+        .cookie("sellerRefreshToken", "")
+        .cookie("sellerToken", "")
+        .cookie("userRefreshToken", "")
+        .cookie("userToken", "")
+        .status(200).end();
+}
