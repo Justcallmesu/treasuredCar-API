@@ -59,6 +59,7 @@ const car = require(path.join(__dirname, "./routes/carRoutes.js"));
 const seller = require(path.join(__dirname, "./routes/sellerRoutes.js"));
 const transaction = require(path.join(__dirname, "./routes/transactionRoutes.js"));
 const user = require(path.join(__dirname, "./routes/userRoutes.js"));
+const otp = require(path.join(__dirname, "./routes/otpRoutes.js"));
 
 // Server Check
 app.get("/", (req, res) => {
@@ -78,6 +79,7 @@ app.use("/api/v1/seller", seller);
 
 app.use("/api/v1/transaction", transaction);
 app.use("/api/v1/booking", booking);
+app.use("/api/v1/otp", otp);
 
 app.use("/api/v1/car", car);
 
