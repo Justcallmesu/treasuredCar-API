@@ -34,11 +34,11 @@ async function sendToken(req, res, email, data, role = "user") {
         {
             maxAge: refreshCookieAge,
             httpOnly: true,
-            secure: true,
+            secure: false,
             sameSite: "none"
         })
         .cookie(`${role}Token`, token, {
-            secure: true,
+            secure: false,
             sameSite: "none"
         })
         .status(data.statusCode).json(data);
