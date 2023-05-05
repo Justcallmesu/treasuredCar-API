@@ -82,13 +82,16 @@ exports.updateTransactionsStatus = async (req, res, next) => {
 
     if (!transaction) return next(new APIError(404, "Transaction Not Found"));
 
+    const foundCars = await cars.findOne({ _id: body.carId });
+
+    if (!foundCars) return next(new APIError(404, "No Car Found"));
+    console.log(foundCars);
+    const booking = await bookings.create({ userId: user._id, carId: body.carId, transactionId: transaction._id, total: foundCars.price });
+
     transaction.status = "paid";
 
     await transaction.save();
 
-    const foundCars = cars.findOne({ _id: body.carId });
-
-    const booking = await bookings.create({ userId: user._id, carId: body.carId, transactionId: transaction._id, total: foundCars.price });
 
     res.status(200).json(new APIResponse(200, "success", "Status Updated Successfully", { Transaction: transaction, booking }));
 }
