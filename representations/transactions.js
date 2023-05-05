@@ -70,7 +70,7 @@ exports.getTransactions = async (req, res, next) => {
 }
 
 exports.updateTransactionsStatus = async (req, res, next) => {
-    const { user } = req;
+    const { user, body } = req;
 
     if (!user) return next(new APIError(404, "User Not Found"));
 
