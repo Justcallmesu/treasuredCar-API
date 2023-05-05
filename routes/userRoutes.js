@@ -2,7 +2,7 @@
 const path = require("path");
 
 // Authorization Methods
-const { login, register, getCredentials } = require(path.join(__dirname, "../auth/users.js"));
+const { login, register, getCredentials, forgotPassword, changePassword } = require(path.join(__dirname, "../auth/users.js"));
 const { isLoggedIn } = require(path.join(__dirname, "../auth/UsersAuth.js"));
 const { isObjectId } = require('../auth/auth');
 
@@ -27,6 +27,10 @@ const bookingRoutes = require(path.join(__dirname, "./bookingRoutes.js"));
 router.route("/login").post(asyncHandler(login));
 router.route("/register").post(asyncHandler(register));
 router.route("/getCredentials").get(asyncHandler(getCredentials));
+
+// Forgot Password
+router.route("/forgotPassword").patch(asyncHandler(forgotPassword));
+router.route("/changePassword").patch(asyncHandler(changePassword));
 
 // Get Users Data
 router.use(asyncHandler(isLoggedIn));

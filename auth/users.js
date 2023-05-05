@@ -75,6 +75,57 @@ exports.register = async function (req, res, next) {
     res.status(201).json(new APIResponse(200, "success", "Account created, OTP sent to the email"));
 }
 
+exports.forgotPassword = async function (req, res, next) {
+    const { body } = req;
+
+    if (!("email" in body)) return next(new APIError(400, "Missing Data: Email must included"));
+
+    const otpCode = generateOTP();
+
+    await otp.create({
+        otp: otpCode,
+        email: body.email,
+        type: "User",
+        actions: "forgotPassword"
+    })
+
+    sendEmail({
+        email: body.email,
+        subject: "OTP Code - Dont Share",
+        message: `Hello there this is your OTP Code for Forgot Password, it expires after 1 hour be quick : ${otpCode}`
+    })
+
+    res.status(201).json(new APIResponse(200, "success", "Forgot Password, OTP sent to the email"));
+}
+
+exports.changePassword = async (req, res, next) => {
+    const { body } = req;
+
+    if (!("email" in body) || !("otpCode" in body) || !("type" in body) || !("password" in body) || !("confirmPassword" in body)) return next(new APIError(400, "Missing Data"));
+
+    const { email, otpCode, type, password, confirmPassword } = body;
+
+    const foundOTP = await otp.findOne({ email, otp: otpCode, type }).lean();
+
+    if (!foundOTP) return next(new APIError(401, "OTP May Invalid"));
+
+    if (password.length < 8 || confirmPassword.length < 8) return next(new APIError(400, "Password must 8 character or more"));
+
+    if (password !== confirmPassword) return next(new APIError(400, "Password Doesnt match with Confirm Password"))
+
+    const foundUser = await users.findOne({ email });
+
+    if (!foundUser) return next(new APIError(404, "User not Found"));
+
+    foundUser.password = password;
+
+    await foundUser.save();
+
+    await otp.deleteOne({ _id: foundOTP._id })
+
+    res.status(201).json(new APIResponse(201, "success", "Password Changed"));
+}
+
 exports.getCredentials = async function (req, res, next) {
     await isRefreshTokenValid(req, res, next, "user");
     res.status(200).end();
