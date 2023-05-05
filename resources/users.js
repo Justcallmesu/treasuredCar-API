@@ -39,6 +39,14 @@ const userSchema = mongoose.Schema(
             type: String,
             default: Date.now(),
             required: [true, "User must have Password Last Changed"]
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now()
+        },
+        isActive: {
+            type: Boolean,
+            default: false
         }
     },
     {
@@ -52,6 +60,17 @@ const userSchema = mongoose.Schema(
 
 // Indexing
 userSchema.index({ email: 1 });
+userSchema.index(
+    {
+        createdAt: 1
+    }, {
+    expires: "1h",
+    partialFilterExpression: {
+        isActive: {
+            $eq: false
+        }
+    }
+})
 
 // Middleware
 userSchema.pre("save", async function (next) {

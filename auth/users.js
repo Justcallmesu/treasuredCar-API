@@ -8,10 +8,13 @@ const APIResponse = require(path.join(__dirname, "../class/APiResponse.js"));
 
 // Models
 const users = require(path.join(__dirname, "../resources/users.js"));
+const otp = require(path.join(__dirname, "../resources/OTP.js"));
 
 // Methods
 const sendToken = require(path.join(__dirname, "../methods/auth-methods/sendToken.js"));
 const validateBody = require(path.join(__dirname, "../methods/auth-methods/validateBody.js"));
+const generateOTP = require(path.join(__dirname, "../methods/OTP/otpGenerator.js"));
+const sendEmail = require(path.join(__dirname, "../methods/OTP/emailSender.js"));
 
 
 exports.login = async function (req, res, next) {
@@ -26,7 +29,8 @@ exports.login = async function (req, res, next) {
 
     const foundUser = await users.findOne({ email: body.email }).select("+password");
 
-    if (!foundUser) return next(new APIError(400, "Your email or password is incorrect"));
+    if (!foundUser || !foundUser?.isActive) return next(new APIError(400, "Your email or password is incorrect"));
+
     if (!(await foundUser.comparePassword(body.password))) return next(new APIError(400, "Your email or password is incorrect"));
 
     sendToken(req, res, body.email, new APIResponse(200, "success", "login Successfully"), "user");
@@ -51,9 +55,24 @@ exports.register = async function (req, res, next) {
 
     if (isEmailExist) return next(new APIError(409, "Email already used !"));
 
-    const { name, email } = await users.create(body);
+    const { email } = await users.create(body);
 
-    sendToken(req, res, email, new APIResponse(201, "success", "User created successfully", { user: { name, email } }, "user"));
+    const otpCode = generateOTP();
+
+    await otp.create({
+        otp: otpCode,
+        email,
+        type: "User",
+        actions: "register"
+    })
+
+    sendEmail({
+        email,
+        subject: "OTP Code - Dont Share",
+        message: `Hello there this is your OTP Code for Registering, it expires after 1 hour be quick : ${otpCode}`
+    })
+
+    res.status(201).json(new APIResponse(200, "success", "Account created, OTP sent to the email"));
 }
 
 exports.getCredentials = async function (req, res, next) {
