@@ -14,13 +14,12 @@ const { createTransactions, getTransactions, updateTransactionsStatus } = requir
 // Router
 const router = require("express").Router({ mergeParams: true });
 
-// Stripe
-router.route("/webhook").patch(asyncHandler(updateTransactionsStatus))
 
 // Routing
 router.use(asyncHandler(isLoggedIn));
 router.route("/")
     .get(asyncHandler(getTransactions))
-    .post(asyncHandler(createTransactions));
+    .post(asyncHandler(createTransactions))
+    .patch(asyncHandler(updateTransactionsStatus));
 
 module.exports = router;
