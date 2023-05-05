@@ -17,9 +17,9 @@ exports.isObjectId = (req, res, next) => {
 
 exports.logOut = (req, res, next) => {
     res
-        .cookie("sellerRefreshToken", "", { sameSite: "none", secure: false })
-        .cookie("sellerToken", "", { sameSite: "none", secure: false })
-        .cookie("userRefreshToken", "", { sameSite: "none", secure: false })
-        .cookie("userToken", "", { sameSite: "none", secure: false })
+        .cookie("sellerRefreshToken", "", { sameSite: "none", secure: true })
+        .cookie("sellerToken", "", { sameSite: "none", secure: true })
+        .cookie("userRefreshToken", "", { sameSite: "none", secure: true })
+        .cookie("userToken", "", { sameSite: "none", secure: true })
         .status(200).end();
 }
