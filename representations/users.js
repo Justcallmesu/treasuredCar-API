@@ -40,10 +40,7 @@ exports.deleteMyUser = async (req, res, next) => {
         message: `Hello there this is your OTP Code for Delete Account, it expires after 1 hour be quick : ${otpCode}`
     })
 
-    res.status(201).json(new APIResponse(200, "success", "Account created, OTP sent to the email"));
-
-
-    res.status(204).end();
+    res.status(200).json(new APIResponse(200, "success", "Account On Delete, OTP sent to the email"));
 }
 
 exports.getUser = async (req, res, next) => {
