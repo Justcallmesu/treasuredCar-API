@@ -1,7 +1,7 @@
 {
   "name": "treasuredcar-api",
   "version": "1.0.0",
-  "description": "This is a Treasured Car API for my College Project Assignment with Socket, Geospatial Features, and Crud With Express,mongo and Socket.io using RMR (REsource-Method-Representation) System and Restful APi Architecture",
+  "description": "This is a Treasured Car API for my College Project Assignment with Socket, Geospatial Features, and Crud With Express,mongo and Socket.io using RMR (REsource-Method-Representation) System and Restful API Architecture",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",

@@ -3,7 +3,7 @@ const path = require("path");
 
 // Class
 const APIError = require(path.join(__dirname, "../class/APIerror.js"));
-const APIResponse = require(path.join(__dirname, "../class/APiResponse.js"));
+const APIResponse = require(path.join(__dirname, "../class/APIResponse.js"));
 
 // Methods
 const sendToken = require(path.join(__dirname, "../methods/auth-methods/sendToken.js"));

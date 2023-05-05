@@ -4,7 +4,7 @@ const isRefreshTokenValid = require("../methods/auth-methods/isRefreshTokenValid
 
 // Class
 const APIError = require(path.join(__dirname, "../class/APIerror.js"));
-const APIResponse = require(path.join(__dirname, "../class/APiResponse.js"));
+const APIResponse = require(path.join(__dirname, "../class/APIResponse.js"));
 
 // Models
 const users = require(path.join(__dirname, "../resources/users.js"));
