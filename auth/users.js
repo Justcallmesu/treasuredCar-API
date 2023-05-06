@@ -89,7 +89,7 @@ exports.forgotPassword = async function (req, res, next) {
         actions: "forgotPassword"
     })
 
-    sendEmail({
+    await sendEmail({
         email: body.email,
         subject: "OTP Code - Dont Share",
         message: `Hello there this is your OTP Code for Forgot Password, it expires after 1 hour be quick : ${otpCode}`
